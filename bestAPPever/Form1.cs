@@ -24,6 +24,7 @@ namespace bestAPPever
             {
                 label1.Text = "Привет Илья, я кодер Саша";
                 a = false;
+                //dsds
             }
             else
             {
