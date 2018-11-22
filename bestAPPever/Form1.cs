@@ -17,6 +17,7 @@ namespace bestAPPever
             InitializeComponent();
         }
 
+        //Комент ёобана
         bool a = true;
         private void button1_Click(object sender, EventArgs e)
         {
