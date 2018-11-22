@@ -19,7 +19,16 @@ namespace bestAPPever
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //it's my comment for this button!
+            bool a = true;
+            if (a)
+            {
+                label1.Text = "Привет Илья, я кодер Саша";
+                a = false;
+            }
+            else
+            {
+                label1.Text = "Зачем нажимать дважды а?!";
+            }
         }
     }
 }
