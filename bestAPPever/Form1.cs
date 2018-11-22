@@ -1,13 +1,19 @@
 ﻿using System.Windows.Forms;
 
+
 namespace bestAPPever
 {
-    public partial class Form1 : Form
+    public partial class FormFirst : Form
     {
-        public Form1()
+        public FormFirst()
         {
             InitializeComponent();
         }
-        
+
+        private void buttonReg_Click(object sender, System.EventArgs e)
+        {
+            var formLogIn = new FormLogIn();
+            formLogIn.Show();
+        }
     }
 }
