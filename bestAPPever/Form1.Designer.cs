@@ -54,11 +54,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(125, 78);
+            this.ClientSize = new System.Drawing.Size(1039, 605);
             this.Controls.Add(this.buttonRegLog);
             this.Controls.Add(this.label1);
             this.Name = "FormFirst";
             this.Text = "Вход";
+            this.Load += new System.EventHandler(this.FormFirst_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
