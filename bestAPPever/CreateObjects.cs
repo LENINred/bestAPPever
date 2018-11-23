@@ -14,6 +14,16 @@ namespace bestAPPever
             return textBox;
         }
 
+        public TextBox createTextBox(string name, System.Drawing.Point point, bool hide)
+        {
+            TextBox textBox = new TextBox();
+            textBox.Name = "textBox" + name;
+            textBox.Location = point;
+            textBox.Size = new System.Drawing.Size(100, 12);
+            textBox.UseSystemPasswordChar = hide;
+            return textBox;
+        }
+
         //Создание кнопок
         public Button createButton(string name, System.Drawing.Point point)
         {
@@ -48,14 +58,15 @@ namespace bestAPPever
             return label;
         }
 
-        public CheckBox createCheckBox(string name, string text, System.Drawing.Point point)
+        public ComboBox createComboBox(string name, string text, System.Drawing.Point point)
         {
-            CheckBox checkBox = new CheckBox();
-            checkBox.Location = new System.Drawing.Point(12, 110);
-            checkBox.Name = "label" + name;
-            checkBox.AutoSize = true;
-            checkBox.Text = text;
-            return checkBox;
+            ComboBox comboBox = new ComboBox();
+            comboBox.Location = new System.Drawing.Point(12, 110);
+            comboBox.Name = "comboBox" + name;
+            comboBox.Text = text;
+            comboBox.Items.Add("Мужской");
+            comboBox.Items.Add("Женский");
+            return comboBox;
         }
     }
 }
