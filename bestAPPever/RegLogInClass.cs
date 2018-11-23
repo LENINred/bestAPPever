@@ -13,7 +13,7 @@ namespace bestAPPever
         MySqlCommand myCommand;
         public KeyValuePair<bool[], string> checkLogin(string login, string pass)
         {
-            KeyValuePair<bool[], string> pairLog = new KeyValuePair<bool[], string>();
+            KeyValuePair<bool[], string> pairLog = new KeyValuePair<bool[], string>();//Создание пары ключ,значение (bool[вход, наличие перса], Сообщение)
             try
             {
                 myConnection = new MySqlConnection(Connect);

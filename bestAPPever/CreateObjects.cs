@@ -4,6 +4,7 @@ namespace bestAPPever
 {
     class CreateObjects
     {
+        //Создание текстовых полей
         public TextBox createTextBox(string name, System.Drawing.Point point)
         {
             TextBox textBox = new TextBox();
@@ -13,6 +14,7 @@ namespace bestAPPever
             return textBox;
         }
 
+        //Создание кнопок
         public Button createButton(string name, System.Drawing.Point point)
         {
             Button button = new Button();
@@ -23,6 +25,8 @@ namespace bestAPPever
             return button;
         }
 
+
+        //Создание меток
         public Label createLabel(string name, string text, System.Drawing.Point point)
         {
             Label label = new Label();
@@ -44,7 +48,7 @@ namespace bestAPPever
             return label;
         }
 
-        public Label createCheckBox(string name, string text, System.Drawing.Point point)
+        public CheckBox createCheckBox(string name, string text, System.Drawing.Point point)
         {
             CheckBox checkBox = new CheckBox();
             checkBox.Location = new System.Drawing.Point(12, 110);
