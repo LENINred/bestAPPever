@@ -13,9 +13,9 @@ namespace bestAPPever
         {
             buttonRegLog.Visible = false;
 
-            this.Controls.Add(addTextBox("Login", new System.Drawing.Point(12, 12)));
-            this.Controls.Add(addTextBox("Pass", new System.Drawing.Point(12, 36)));
-            this.Controls.Add(addButton("Ok", new System.Drawing.Point(12, 60)));
+            this.Controls.Add(new CreateObjects().createTextBox("Login", new System.Drawing.Point(12, 12)));
+            this.Controls.Add(new CreateObjects().createTextBox("Pass", new System.Drawing.Point(12, 36)));
+            this.Controls.Add(new CreateObjects().createButton("Ok", new System.Drawing.Point(12, 60)));
 
 
             Button buttonOk = (Button)this.Controls.Find("buttonOk", true).GetValue(0);
@@ -33,25 +33,6 @@ namespace bestAPPever
                 AutoSize = true,
                 Text = logInClass.LogRegSQL(((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0)).Text, ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0)).Text)  
             });
-        }
-
-        private TextBox addTextBox(string name, System.Drawing.Point point)
-        {
-            TextBox textBox = new TextBox();
-            textBox.Name = "textBox" + name;
-            textBox.Location = point;
-            textBox.Size = new System.Drawing.Size(100, 12);
-            return textBox;
-        }
-
-        private Button addButton(string name, System.Drawing.Point point)
-        {
-            Button button = new Button();
-            button.Name = "button" + name;
-            button.Text = name;
-            button.Location = point;
-            button.Size = new System.Drawing.Size(100, 23);
-            return button;
         }
 
         private void FormFirst_Load(object sender, System.EventArgs e)
