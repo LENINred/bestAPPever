@@ -27,35 +27,38 @@ namespace bestAPPever
         {
             if((textBoxLogin.Text != String.Empty) && (textBoxPass.Text != String.Empty))
             {
-                ConnectToSQL(textBoxLogin.Text, textBoxPass.Text);
+                LogRegSQL(textBoxLogin.Text, textBoxPass.Text);
             }
             else
             {
                 MessageBox.Show("Заполните поля");
             }
         }
-
-        private string ConnectToSQL(string login, string pass)
+        
+        private string LogRegSQL(string login, string pass)
         {
             try
             {
-                string CommandText = "SELECT `name` FROM `tamagoches` WHERE `name` = '" + login + "'";
+                string responseSQL = "";
+                string requestSQL = "SELECT `name` FROM `tamagoches` WHERE `name` = '" + login + "' AND `password` = " + pass + "";
                 string Connect = "Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111";
                 MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
-
-                MySqlDataReader MyDataReader = myCommand.ExecuteReader();
-
-                string result = "";
-                while (MyDataReader.Read())
+                var t = myCommand.ExecuteScalar();
+                if (t != null)
                 {
-                    result = MyDataReader.GetString(0); //Получаем строку
-                    //int id = MyDataReader.GetInt32(1); //Получаем целое число
+                    responseSQL = t.ToString();
                 }
-                MessageBox.Show(result);
-                MyDataReader.Close();
                 myConnection.Close();
+                if(responseSQL == login)
+                {
+                    labelLog.Text = "Успешный вход";
+                }
+                else
+                {
+                    labelLog.Text = "Логин либо пароль\n введены не верно";
+                }
             }
             catch(Exception ex)
             {
