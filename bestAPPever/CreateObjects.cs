@@ -33,5 +33,25 @@ namespace bestAPPever
             return label;
         }
 
+        public Label createLabel(string name, string text, System.Drawing.Point point, System.Drawing.Size size)
+        {
+            Label label = new Label();
+            label.Location = new System.Drawing.Point(12, 110);
+            label.Name = "label" + name;
+            label.AutoSize = true;
+            label.Size = size;
+            label.Text = text;
+            return label;
+        }
+
+        public Label createCheckBox(string name, string text, System.Drawing.Point point)
+        {
+            CheckBox checkBox = new CheckBox();
+            checkBox.Location = new System.Drawing.Point(12, 110);
+            checkBox.Name = "label" + name;
+            checkBox.AutoSize = true;
+            checkBox.Text = text;
+            return checkBox;
+        }
     }
 }
