@@ -22,5 +22,16 @@ namespace bestAPPever
             button.Size = new System.Drawing.Size(100, 23);
             return button;
         }
+
+        public Label createLabel(string name, string text, System.Drawing.Point point)
+        {
+            Label label = new Label();
+            label.Location = new System.Drawing.Point(12, 110);
+            label.Name = "label"+name;
+            label.AutoSize = true;
+            label.Text = text;
+            return label;
+        }
+
     }
 }
