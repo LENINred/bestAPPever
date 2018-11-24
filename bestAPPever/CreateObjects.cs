@@ -11,7 +11,18 @@ namespace bestAPPever
             textBox.Name = "textBox" + name;
             textBox.Location = point;
             textBox.Size = new System.Drawing.Size(100, 12);
+            textBox.KeyPress += TextBox_KeyPress;
+            textBox.ContextMenu = new ContextMenu();
             return textBox;
+        }
+
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            string symbols = "\"`'~!@#$%^&*()+\\№;%:?*-=.,/| ";
+            if ((symbols.Contains(e.KeyChar.ToString())) || (e.KeyChar == '\u0016'))
+            {
+                e.Handled = true;
+            }
         }
 
         public TextBox createTextBox(string name, System.Drawing.Point point, bool hide)
@@ -21,7 +32,17 @@ namespace bestAPPever
             textBox.Location = point;
             textBox.Size = new System.Drawing.Size(100, 12);
             textBox.UseSystemPasswordChar = hide;
+            textBox.KeyPress += TextBox_KeyPress1;
+            textBox.ContextMenu = new ContextMenu();
             return textBox;
+        }
+
+        private void TextBox_KeyPress1(object sender, KeyPressEventArgs e)
+        {
+            if((e.KeyChar.ToString() == " ") || (e.KeyChar == '\u0016'))
+            {
+                e.Handled = true;
+            }
         }
 
         //Создание кнопок
