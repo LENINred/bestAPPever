@@ -45,10 +45,12 @@ namespace bestAPPever
                     //remove old objects and add new
                     this.Controls.Clear();
                     this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
+                    this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
                 }
             }
         }
 
+        TamagochiClass tamagochiClass;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
             textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0)).Text;
@@ -65,6 +67,24 @@ namespace bestAPPever
                     {
                         //move to pers creation
                         //remove old objects and add new
+                        this.Controls.Clear();
+                        this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
+                        this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
+
+                        PictureBox headarrow = new CreateObjects().createArrow("head", new System.Drawing.Point(150, 85));
+                        headarrow.Click += Headarrow_Click;
+                        this.Controls.Add(headarrow);
+
+                        PictureBox bodyarrow = new CreateObjects().createArrow("body", new System.Drawing.Point(150, 185));
+                        bodyarrow.Click += Bodyarrow_Click;
+                        this.Controls.Add(bodyarrow);
+
+                        PictureBox legsarrow = new CreateObjects().createArrow("legs", new System.Drawing.Point(150, 260));
+                        legsarrow.Click += Legsarrow_Click;
+                        this.Controls.Add(legsarrow);
+
+                        tamagochiClass = new TamagochiClass(1, 1, 1);
+                        this.Controls.Add(tamagochiClass.createTamagoci());
                     }
                     else
                     {
@@ -75,6 +95,20 @@ namespace bestAPPever
             }
         }
 
+        private void Headarrow_Click(object sender, EventArgs e)
+        {
+            tamagochiClass.nextHead();
+        }
+
+        private void Bodyarrow_Click(object sender, EventArgs e)
+        {
+            tamagochiClass.nextBody();
+        }
+
+        private void Legsarrow_Click(object sender, EventArgs e)
+        {
+            tamagochiClass.nextLegs();
+        }
 
         //Проверка валидности логина/пароля
         private bool checkTextBoxes(string login, string password)
@@ -89,6 +123,7 @@ namespace bestAPPever
                 {
                     log += "Вы ввели недопустимый символ в имени\n";
                     check = false;
+                    break;
                 }               
             }
             if ((login == "") || (login.Length < 3))
@@ -96,7 +131,6 @@ namespace bestAPPever
                 log += "Имя должно содержать больше 3-х символов\n";
                 check = false;
             }
-
             if (password.Contains(" "))
             {
                 log += "Пароль не может содержать пробелов\n";
