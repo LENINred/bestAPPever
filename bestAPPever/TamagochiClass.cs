@@ -81,13 +81,12 @@ namespace bestAPPever
             getCounts();
             if (short.Parse(Head) <= headsCount)
             {
-                using (Graphics g = Graphics.FromImage(tamagoci.Image))
+                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
                 {
-                    g.DrawImage(getHead(), 0, 0, getBody().Width, getHead().Height);
-                    g.Save();
+                    greaphics.DrawImage(getHead(), 0, 0, getBody().Width, getHead().Height);
+                    greaphics.Save();
                 }
                 tamagoci.Refresh();
-                tamagoci.Update();
                 Head = (short.Parse(Head) + 1).ToString();
             }
             else Head = "1";
@@ -98,14 +97,13 @@ namespace bestAPPever
             getCounts();
             if (short.Parse(Body) <= bodysCount)
             {
-                Body = (short.Parse(Body) + 1).ToString();
-                using (Graphics g = Graphics.FromImage(tamagoci.Image))
+                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
                 {
-                    g.DrawImage(getBody(), 0, 114, getBody().Width, getBody().Height);
-                    g.Save();
+                    greaphics.DrawImage(getBody(), 0, 114, getBody().Width, getBody().Height);
+                    greaphics.Save();
                 }
                 tamagoci.Refresh();
-                tamagoci.Update();
+                Body = (short.Parse(Body) + 1).ToString();
             }
             else Body = "1";
         }
@@ -115,17 +113,63 @@ namespace bestAPPever
             getCounts();
             if (short.Parse(Legs) <= legsCount)
             {
-                Head = (short.Parse(Legs) + 1).ToString();
-                using (Graphics g = Graphics.FromImage(tamagoci.Image))
+                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
                 {
-                    g.DrawImage(getLegs(), 0, 222, getBody().Width, getLegs().Height);
-                    g.Save();
+                    greaphics.DrawImage(getLegs(), 0, 222, getBody().Width, getLegs().Height);
+                    greaphics.Save();
                 }
                 tamagoci.Refresh();
-                tamagoci.Update();
+                Legs = (short.Parse(Legs) + 1).ToString();
             }
             else Legs = "1";
         }
 
+        public void prevHead()
+        {
+            getCounts();
+            if (short.Parse(Head) >= 1)
+            {
+                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
+                {
+                    greaphics.DrawImage(getHead(), 0, 0, getBody().Width, getHead().Height);
+                    greaphics.Save();
+                }
+                tamagoci.Refresh();
+                Head = (short.Parse(Head) - 1).ToString();
+            }
+            else Head = headsCount.ToString();
+        }
+
+        public void prevBody()
+        {
+            getCounts();
+            if (short.Parse(Body) >= 1)
+            {
+                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
+                {
+                    greaphics.DrawImage(getBody(), 0, 114, getBody().Width, getBody().Height);
+                    greaphics.Save();
+                }
+                tamagoci.Refresh();
+                Body = (short.Parse(Body) - 1).ToString();
+            }
+            else Body = bodysCount.ToString();
+        }
+
+        public void prevLegs()
+        {
+            getCounts();
+            if (short.Parse(Legs) >= 1)
+            {
+                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
+                {
+                    greaphics.DrawImage(getLegs(), 0, 222, getBody().Width, getLegs().Height);
+                    greaphics.Save();
+                }
+                tamagoci.Refresh();
+                Legs = (short.Parse(Legs) - 1).ToString();
+            }
+            else Legs = legsCount.ToString();
+        }
     }
 }

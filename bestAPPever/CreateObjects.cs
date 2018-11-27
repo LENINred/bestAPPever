@@ -38,8 +38,9 @@ namespace bestAPPever
             return button;
         }
 
-        public PictureBox createArrow(string name, System.Drawing.Point point)
+        public PictureBox createArrow(string name, string path, System.Drawing.Point point)
         {
+
             PictureBox pictureBox = new PictureBox();
             pictureBox.Name = name;
             pictureBox.Size = new Size(40, 15);
@@ -49,7 +50,7 @@ namespace bestAPPever
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixel;
-                g.DrawString(">>>", new Font("Arial", 12f), Brushes.Black, new Point(0, 0));
+                g.DrawString(path, new Font("Arial", 12f), Brushes.Black, new Point(0, 0));
                 g.Save();
             }
             pictureBox.Image = pictureBox.Image;
