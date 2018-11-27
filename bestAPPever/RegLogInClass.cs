@@ -44,8 +44,10 @@ namespace bestAPPever
                 pairLog = new KeyValuePair<bool[], string>(new bool[] { false, false }, ex.Message);
             }
             return pairLog;
+            pairLog = new KeyValuePair<bool[], string>(new bool[] { true, true }, "Успешный вход");
+            return pairLog;
         }
-
+        
         private bool checkLogin(string login)
         {
             try
@@ -99,6 +101,5 @@ namespace bestAPPever
             }
             return pairLog;
         }
-
     }
 }

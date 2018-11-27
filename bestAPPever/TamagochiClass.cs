@@ -10,52 +10,32 @@ namespace bestAPPever
 {
     class TamagochiClass
     {
-        private string Head = String.Empty;
-        private string Body = String.Empty;
-        private string Legs = String.Empty;
+        private int curHead;
+        private int curBody;
+        private int curLegs;
         private PictureBox tamagoci;
-        private int headsCount = 0;
-        private int bodysCount = 0;
-        private int legsCount = 0;
 
         public TamagochiClass(int head, int body, int legs)
         {
-            Head = head.ToString();
-            Body = body.ToString();
-            Legs = legs.ToString();
+            curHead = head;
+            curBody = body;
+            curLegs = legs;
+            getImages();
         }
 
-        private void getCounts()
+        List<Image> Heads = new List<Image>();
+        List<Image> Bodys = new List<Image>();
+        List<Image> Legs = new List<Image>();
+        private void getImages()
         {
-            headsCount = 0;
-            bodysCount = 0;
-            legsCount = 0;
             ResourceSet rsrcSet = bestAPPever.Properties.Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentCulture, false, true);
             foreach (DictionaryEntry entry in rsrcSet)
             {
                 String name = entry.Key.ToString();
-                if (name.Contains("head")) headsCount++;
-                if (name.Contains("body")) bodysCount++;
-                if (name.Contains("legs")) legsCount++;
+                if (name.Contains("head")) Heads.Add((Image)entry.Value);
+                if (name.Contains("body")) Bodys.Add((Image)entry.Value);
+                if (name.Contains("legs")) Legs.Add((Image)entry.Value);
             }
-        }
-
-        private Image getHead()
-        {
-            Image headPic = (Image)Properties.Resources.ResourceManager.GetObject("head_" + Head);
-            return headPic;
-        }
-
-        private Image getBody()
-        {
-            Image bodyPic = (Image)Properties.Resources.ResourceManager.GetObject("body_" + Body);
-            return bodyPic;
-        }
-
-        private Image getLegs()
-        {
-            Image legsPic = (Image)Properties.Resources.ResourceManager.GetObject("legs_" + Legs);
-            return legsPic;
         }
 
         public PictureBox createTamagoci()
@@ -65,12 +45,12 @@ namespace bestAPPever
             tamagoci.Location = new Point(12, 70);
             tamagoci.BorderStyle = BorderStyle.FixedSingle;
             tamagoci.Image = new Bitmap(125, 299);
-            using (Graphics g = Graphics.FromImage(tamagoci.Image))
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                g.DrawImage(getHead(), 0, 0, getBody().Width, getHead().Height);
-                g.DrawImage(getBody(), 0, 114, getBody().Width, getBody().Height);
-                g.DrawImage(getLegs(), 0, 222, getBody().Width, getLegs().Height);
-                g.Save();
+                graphics.DrawImage(Heads[0], 0, 0);
+                graphics.DrawImage(Bodys[0], 0, 114);
+                graphics.DrawImage(Legs[0], 0, 222);
+                graphics.Save();
             }
             tamagoci.Image = tamagoci.Image;
             return tamagoci;
@@ -78,98 +58,68 @@ namespace bestAPPever
 
         public void nextHead()
         {
-            getCounts();
-            if (short.Parse(Head) <= headsCount)
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
-                {
-                    greaphics.DrawImage(getHead(), 0, 0, getBody().Width, getHead().Height);
-                    greaphics.Save();
-                }
-                tamagoci.Refresh();
-                Head = (short.Parse(Head) + 1).ToString();
+                if (curHead < Heads.Count - 1) curHead++;
+                    else curHead = 0;
+                graphics.DrawImage(Heads[curHead], 0, 0);
+                tamagoci.Image = tamagoci.Image;
             }
-            else Head = "1";
         }
 
         public void nextBody()
         {
-            getCounts();
-            if (short.Parse(Body) <= bodysCount)
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
-                {
-                    greaphics.DrawImage(getBody(), 0, 114, getBody().Width, getBody().Height);
-                    greaphics.Save();
-                }
-                tamagoci.Refresh();
-                Body = (short.Parse(Body) + 1).ToString();
+                if (curBody < Bodys.Count - 1) curBody++;
+                    else curBody = 0;
+                graphics.DrawImage(Bodys[curBody], 0, 114);
+                tamagoci.Image = tamagoci.Image;
             }
-            else Body = "1";
         }
 
         public void nextLegs()
         {
-            getCounts();
-            if (short.Parse(Legs) <= legsCount)
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
-                {
-                    greaphics.DrawImage(getLegs(), 0, 222, getBody().Width, getLegs().Height);
-                    greaphics.Save();
-                }
-                tamagoci.Refresh();
-                Legs = (short.Parse(Legs) + 1).ToString();
+                if (curLegs < Legs.Count - 1) curLegs++;
+                    else curLegs = 0;
+                graphics.DrawImage(Legs[curLegs], 0, 222);
+                tamagoci.Image = tamagoci.Image;
             }
-            else Legs = "1";
         }
 
         public void prevHead()
         {
-            getCounts();
-            if (short.Parse(Head) >= 1)
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
-                {
-                    greaphics.DrawImage(getHead(), 0, 0, getBody().Width, getHead().Height);
-                    greaphics.Save();
-                }
-                tamagoci.Refresh();
-                Head = (short.Parse(Head) - 1).ToString();
+                if (curHead > 0) curHead--;
+                else curHead = Heads.Count - 1;
+                graphics.DrawImage(Heads[curHead], 0, 0);
+                tamagoci.Image = tamagoci.Image;
             }
-            else Head = headsCount.ToString();
         }
-
+        
         public void prevBody()
         {
-            getCounts();
-            if (short.Parse(Body) >= 1)
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
-                {
-                    greaphics.DrawImage(getBody(), 0, 114, getBody().Width, getBody().Height);
-                    greaphics.Save();
-                }
-                tamagoci.Refresh();
-                Body = (short.Parse(Body) - 1).ToString();
+                if (curBody > 0) curBody--;
+                else curBody = Bodys.Count - 1;
+                graphics.DrawImage(Bodys[curBody], 0, 114);
+                tamagoci.Image = tamagoci.Image;
             }
-            else Body = bodysCount.ToString();
         }
 
         public void prevLegs()
         {
-            getCounts();
-            if (short.Parse(Legs) >= 1)
+            using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                using (Graphics greaphics = Graphics.FromImage(tamagoci.Image))
-                {
-                    greaphics.DrawImage(getLegs(), 0, 222, getBody().Width, getLegs().Height);
-                    greaphics.Save();
-                }
-                tamagoci.Refresh();
-                Legs = (short.Parse(Legs) - 1).ToString();
+                if (curLegs > 0) curLegs--;
+                else curLegs = Legs.Count - 1;
+                graphics.DrawImage(Legs[curLegs], 0, 222);
+                tamagoci.Image = tamagoci.Image;
             }
-            else Legs = legsCount.ToString();
         }
     }
 }

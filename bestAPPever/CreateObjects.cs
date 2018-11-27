@@ -38,23 +38,31 @@ namespace bestAPPever
             return button;
         }
 
+        string p = "";
         public PictureBox createArrow(string name, string path, System.Drawing.Point point)
         {
-
+            p = path;
             PictureBox pictureBox = new PictureBox();
             pictureBox.Name = name;
-            pictureBox.Size = new Size(40, 15);
+            pictureBox.Size = new Size(30, 20);
             pictureBox.Location = point;
-            pictureBox.BorderStyle = BorderStyle.FixedSingle;
-            pictureBox.Image = new Bitmap(40, 15);
-            using (Graphics g = Graphics.FromImage(pictureBox.Image))
-            {
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixel;
-                g.DrawString(path, new Font("Arial", 12f), Brushes.Black, new Point(0, 0));
-                g.Save();
-            }
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            //pictureBox.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox.Image = (Image)Properties.Resources.ResourceManager.GetObject(p);
             pictureBox.Image = pictureBox.Image;
+            pictureBox.MouseDown += PictureBox_MouseDown;
+            pictureBox.MouseUp += PictureBox_MouseUp;
             return pictureBox;
+        }
+
+        private void PictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            ((PictureBox)sender).Image = (Image)Properties.Resources.ResourceManager.GetObject(p);
+        }
+
+        private void PictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            ((PictureBox)sender).Image = (Image)Properties.Resources.ResourceManager.GetObject(p + "Tap");
         }
 
         //Создание меток

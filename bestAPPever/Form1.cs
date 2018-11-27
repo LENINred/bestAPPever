@@ -71,31 +71,31 @@ namespace bestAPPever
                         this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
                         this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
 
-                        PictureBox headArrowNext = new CreateObjects().createArrow("head", ">>>", new System.Drawing.Point(200, 85));
+                        PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(200, 85));
                         headArrowNext.Click += HeadArrowNext_Click;
                         this.Controls.Add(headArrowNext);
 
-                        PictureBox bodyArrowNext = new CreateObjects().createArrow("body", ">>>", new System.Drawing.Point(200, 185));
+                        PictureBox bodyArrowNext = new CreateObjects().createArrow("body", "arrowRight", new System.Drawing.Point(200, 185));
                         bodyArrowNext.Click += BodyArrowNext_Click;
                         this.Controls.Add(bodyArrowNext);
 
-                        PictureBox legsArrowNext = new CreateObjects().createArrow("legs", ">>>", new System.Drawing.Point(200, 260));
+                        PictureBox legsArrowNext = new CreateObjects().createArrow("legs", "arrowRight", new System.Drawing.Point(200, 300));
                         legsArrowNext.Click += LegsArrowNext_Click;
                         this.Controls.Add(legsArrowNext);
 
-                        PictureBox headArrowPrev = new CreateObjects().createArrow("head", "<<<", new System.Drawing.Point(150, 85));
+                        PictureBox headArrowPrev = new CreateObjects().createArrow("head", "arrowLeft", new System.Drawing.Point(150, 85));
                         headArrowPrev.Click += HeadArrowPrev_Click;
                         this.Controls.Add(headArrowPrev);
 
-                        PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "<<<", new System.Drawing.Point(150, 185));
+                        PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "arrowLeft", new System.Drawing.Point(150, 185));
                         bodyArrowPrev.Click += BodyArrowPrev_Click;
                         this.Controls.Add(bodyArrowPrev);
 
-                        PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "<<<", new System.Drawing.Point(150, 260));
+                        PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(150, 300));
                         legsArrowPrev.Click += LegsArrowPrev_Click;
                         this.Controls.Add(legsArrowPrev);
 
-                        tamagochiClass = new TamagochiClass(1, 1, 1);
+                        tamagochiClass = new TamagochiClass(0, 0, 0);
                         this.Controls.Add(tamagochiClass.createTamagoci());
                     }
                     else
