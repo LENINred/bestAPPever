@@ -48,8 +48,8 @@ namespace bestAPPever
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
                 graphics.DrawImage(Heads[0], 0, 0);
-                graphics.DrawImage(Bodys[0], 0, 114);
-                graphics.DrawImage(Legs[0], 0, 222);
+                graphics.DrawImage(Bodys[0], 0, 133);
+                graphics.DrawImage(Legs[0], 0, 237);
                 graphics.Save();
             }
             tamagoci.Image = tamagoci.Image;
@@ -73,7 +73,7 @@ namespace bestAPPever
             {
                 if (curBody < Bodys.Count - 1) curBody++;
                     else curBody = 0;
-                graphics.DrawImage(Bodys[curBody], 0, 114);
+                graphics.DrawImage(Bodys[curBody], 0, 133);
                 tamagoci.Image = tamagoci.Image;
             }
         }
@@ -84,7 +84,7 @@ namespace bestAPPever
             {
                 if (curLegs < Legs.Count - 1) curLegs++;
                     else curLegs = 0;
-                graphics.DrawImage(Legs[curLegs], 0, 222);
+                graphics.DrawImage(Legs[curLegs], 0, 237);
                 tamagoci.Image = tamagoci.Image;
             }
         }
@@ -106,7 +106,7 @@ namespace bestAPPever
             {
                 if (curBody > 0) curBody--;
                 else curBody = Bodys.Count - 1;
-                graphics.DrawImage(Bodys[curBody], 0, 114);
+                graphics.DrawImage(Bodys[curBody], 0, 133);
                 tamagoci.Image = tamagoci.Image;
             }
         }
@@ -117,7 +117,7 @@ namespace bestAPPever
             {
                 if (curLegs > 0) curLegs--;
                 else curLegs = Legs.Count - 1;
-                graphics.DrawImage(Legs[curLegs], 0, 222);
+                graphics.DrawImage(Legs[curLegs], 0, 237);
                 tamagoci.Image = tamagoci.Image;
             }
         }
