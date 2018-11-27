@@ -28,11 +28,11 @@ namespace bestAPPever
         }
 
         //Создание кнопок
-        public Button createButton(string name, System.Drawing.Point point)
+        public Button createButton(string name, string text, System.Drawing.Point point)
         {
             Button button = new Button();
             button.Name = "button" + name;
-            button.Text = name;
+            button.Text = text;
             button.Location = point;
             button.Size = new System.Drawing.Size(100, 23);
             return button;

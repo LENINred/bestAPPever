@@ -11,41 +11,47 @@ namespace bestAPPever
             InitializeComponent();
         }
 
-        string textBoxLogin;
-        string textBoxPassword;
+        TextBox textBoxLogin;
+        TextBox textBoxPassword;
+        Button buttonLogIn;
         private void buttonRegLog_Click(object sender, System.EventArgs e)
         {
             buttonRegLog.Visible = false;
 
             this.Controls.Add(new CreateObjects().createTextBox("Login", new System.Drawing.Point(12, 12)));
             this.Controls.Add(new CreateObjects().createTextBox("Pass", new System.Drawing.Point(12, 36), true));
-            this.Controls.Add(new CreateObjects().createButton("LogIn", new System.Drawing.Point(12, 60)));
-            this.Controls.Add(new CreateObjects().createButton("Registration", new System.Drawing.Point(12, 85)));
+            this.Controls.Add(new CreateObjects().createButton("LogIn", "Войти", new System.Drawing.Point(12, 60)));
+            this.Controls.Add(new CreateObjects().createButton("Registration", "Регистрация", new System.Drawing.Point(12, 85)));
 
-            Button buttonLogIn = (Button)this.Controls.Find("buttonLogIn", true).GetValue(0);
+            buttonLogIn = (Button)this.Controls.Find("buttonLogIn", true).GetValue(0);
             buttonLogIn.Click += buttonLogIn_Click;
 
             Button buttonReg = (Button)this.Controls.Find("buttonRegistration", true).GetValue(0);
             buttonReg.Click += ButtonReg_Click;
+
+            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
+            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
+            textBoxPassword.KeyPress += TextBoxPassword_KeyPress;
+        }
+
+        private void TextBoxPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r') buttonLogIn.PerformClick();
         }
 
         private void ButtonReg_Click(object sender, System.EventArgs e)
         {
-            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0)).Text;
-            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0)).Text;
-            if (checkTextBoxes(textBoxLogin, textBoxPassword))
+            if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
             {
                 this.Controls.RemoveByKey("labelLog");
                 RegLogInClass reglogInClass = new RegLogInClass();
-                KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin, textBoxPassword);
+                KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
                 this.Controls.Add(new CreateObjects().createLabel("Log", pairLog.Value, new System.Drawing.Point(12, 110)));
                 if (pairLog.Key)
                 {
-                    //move to pers creation
+                    //moveing to pers creation
                     //remove old objects and add new
-                    this.Controls.Clear();
-                    this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
-                    this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
+                    persCreation();
                 }
             }
         }
@@ -53,58 +59,62 @@ namespace bestAPPever
         TamagochiClass tamagochiClass;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
-            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0)).Text;
-            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0)).Text;
-            if (checkTextBoxes(textBoxLogin, textBoxPassword))
+            if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
             {
                 this.Controls.RemoveByKey("labelLog");
                 RegLogInClass reglogInClass = new RegLogInClass();
-                KeyValuePair<bool[], string> pairLog = reglogInClass.checkLogin(textBoxLogin, textBoxPassword);
+                KeyValuePair<bool[], string> pairLog = reglogInClass.checkLogin(textBoxLogin.Text, textBoxPassword.Text);
                 this.Controls.Add(new CreateObjects().createLabel("Log", pairLog.Value, new System.Drawing.Point(12, 110)));
                 if (pairLog.Key[0])
                 {
                     if (pairLog.Key[1])
                     {
-                        //move to pers creation
+                        //moveing to pers creation
                         //remove old objects and add new
-                        this.Controls.Clear();
-                        this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
-                        this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
-
-                        PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(200, 85));
-                        headArrowNext.Click += HeadArrowNext_Click;
-                        this.Controls.Add(headArrowNext);
-
-                        PictureBox bodyArrowNext = new CreateObjects().createArrow("body", "arrowRight", new System.Drawing.Point(200, 185));
-                        bodyArrowNext.Click += BodyArrowNext_Click;
-                        this.Controls.Add(bodyArrowNext);
-
-                        PictureBox legsArrowNext = new CreateObjects().createArrow("legs", "arrowRight", new System.Drawing.Point(200, 300));
-                        legsArrowNext.Click += LegsArrowNext_Click;
-                        this.Controls.Add(legsArrowNext);
-
-                        PictureBox headArrowPrev = new CreateObjects().createArrow("head", "arrowLeft", new System.Drawing.Point(150, 85));
-                        headArrowPrev.Click += HeadArrowPrev_Click;
-                        this.Controls.Add(headArrowPrev);
-
-                        PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "arrowLeft", new System.Drawing.Point(150, 185));
-                        bodyArrowPrev.Click += BodyArrowPrev_Click;
-                        this.Controls.Add(bodyArrowPrev);
-
-                        PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(150, 300));
-                        legsArrowPrev.Click += LegsArrowPrev_Click;
-                        this.Controls.Add(legsArrowPrev);
-
-                        tamagochiClass = new TamagochiClass(0, 0, 0);
-                        this.Controls.Add(tamagochiClass.createTamagoci());
+                        persCreation();
                     }
                     else
                     {
-                        //move to gaming
+                        //moveing to gaming
                         //remove old objects and add pers to screen
                     }
                 }
             }
+        }
+
+        private void persCreation()
+        {
+            this.Controls.Clear();
+            this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
+            this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
+            this.Controls.Add(new CreateObjects().createButton("persCreationOk", "Ok", new System.Drawing.Point(12, 370)));
+
+            PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(200, 85));
+            headArrowNext.Click += HeadArrowNext_Click;
+            this.Controls.Add(headArrowNext);
+
+            PictureBox bodyArrowNext = new CreateObjects().createArrow("body", "arrowRight", new System.Drawing.Point(200, 185));
+            bodyArrowNext.Click += BodyArrowNext_Click;
+            this.Controls.Add(bodyArrowNext);
+
+            PictureBox legsArrowNext = new CreateObjects().createArrow("legs", "arrowRight", new System.Drawing.Point(200, 300));
+            legsArrowNext.Click += LegsArrowNext_Click;
+            this.Controls.Add(legsArrowNext);
+
+            PictureBox headArrowPrev = new CreateObjects().createArrow("head", "arrowLeft", new System.Drawing.Point(150, 85));
+            headArrowPrev.Click += HeadArrowPrev_Click;
+            this.Controls.Add(headArrowPrev);
+
+            PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "arrowLeft", new System.Drawing.Point(150, 185));
+            bodyArrowPrev.Click += BodyArrowPrev_Click;
+            this.Controls.Add(bodyArrowPrev);
+
+            PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(150, 300));
+            legsArrowPrev.Click += LegsArrowPrev_Click;
+            this.Controls.Add(legsArrowPrev);
+
+            tamagochiClass = new TamagochiClass(0, 0, 0);
+            this.Controls.Add(tamagochiClass.createTamagoci());
         }
 
         private void LegsArrowPrev_Click(object sender, EventArgs e)
