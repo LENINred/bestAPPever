@@ -11,41 +11,57 @@ namespace bestAPPever
         MySqlConnection myConnection;
         string requestSQL;
         MySqlCommand myCommand;
-        public KeyValuePair<bool[], string> checkLogin(string login, string pass)
+        public KeyValuePair<int, object>[] checkLogin(string login, string pass)
         {
-            KeyValuePair<bool[], string> pairLog = new KeyValuePair<bool[], string>();//Создание пары ключ,значение (bool[вход, наличие перса], Сообщение)
+            string message = "";
+            int user_id = 0;
+            bool loginSuccess = false;
+            bool persIs = false;
+            KeyValuePair<int, object>[] mas = new KeyValuePair<int, object>[4];            
             try
             {
                 myConnection = new MySqlConnection(Connect);
-                requestSQL = "SELECT `name`, `pers` FROM `users` WHERE `name` = '" + login + "' AND `password` = '" + pass + "'";                
+                requestSQL = "SELECT `user_id`, `name`, `pers` FROM `users` WHERE `name` = '" + login + "' AND `password` = '" + pass + "'";                
                 myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 MySqlDataReader myDataReader = myCommand.ExecuteReader();
                 while (myDataReader.Read())
                 {
-                    if (myDataReader.GetInt32(1) == 0)
+                    user_id = myDataReader.GetInt32(0);
+                    if (myDataReader.GetInt32(2) == 0)
                     {
-                        pairLog = new KeyValuePair<bool[], string>(new bool[]{ true, true }, "Успешный вход");
+                        loginSuccess = true;
+                        persIs = true;
+                        message = "Успешный вход";
                     }
                     else
                     {
-                        pairLog = new KeyValuePair<bool[], string>(new bool[] { true, false }, "Успешный вход");
-                    }
+                        loginSuccess = true;
+                        persIs = false;
+                        message = "Успешный вход";
+                    }                    
                 }
-                if(pairLog.Value == null)
+                if(user_id == 0)
                 {
-                    pairLog = new KeyValuePair<bool[], string>(new bool[] { false, false }, "Пользователя не существует\nлибо логин и пароль\n введены не верно");
+                    message = "Пользователя не существует\nлибо логин и пароль\nвведены не верно";
                 }
+
+                mas[0] = new KeyValuePair<int, object>(0, user_id);
+                mas[1] = new KeyValuePair<int, object>(1, loginSuccess);
+                mas[2] = new KeyValuePair<int, object>(2, persIs);
+                mas[3] = new KeyValuePair<int, object>(3, message);
+
                 myDataReader.Close();
                 myConnection.Close();
             }
             catch (Exception ex)
-            {
-                pairLog = new KeyValuePair<bool[], string>(new bool[] { false, false }, ex.Message);
+            {                
+                mas[0] = new KeyValuePair<int, object>(0, -1);
+                mas[1] = new KeyValuePair<int, object>(1, false);
+                mas[2] = new KeyValuePair<int, object>(2, false);
+                mas[3] = new KeyValuePair<int, object>(3, ex.Message);
             }
-            return pairLog;
-            pairLog = new KeyValuePair<bool[], string>(new bool[] { true, true }, "Успешный вход");
-            return pairLog;
+            return mas;
         }
         
         private bool checkLogin(string login)

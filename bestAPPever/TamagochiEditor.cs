@@ -8,14 +8,14 @@ using System.Windows.Forms;
 
 namespace bestAPPever
 {
-    class TamagochiClass
+    class TamagochiEditor
     {
         private int curHead;
         private int curBody;
         private int curLegs;
         private PictureBox tamagoci;
 
-        public TamagochiClass(int head, int body, int legs)
+        public TamagochiEditor(int head, int body, int legs)
         {
             curHead = head;
             curBody = body;
@@ -41,15 +41,15 @@ namespace bestAPPever
         public PictureBox createTamagoci()
         {
             tamagoci = new PictureBox();
-            tamagoci.Size = new Size(125, 299);
+            tamagoci.Size = new Size(125, 328);
             tamagoci.Location = new Point(12, 70);
             tamagoci.BorderStyle = BorderStyle.FixedSingle;
-            tamagoci.Image = new Bitmap(125, 299);
+            tamagoci.Image = new Bitmap(125, 328);
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
                 graphics.DrawImage(Heads[0], 0, 0);
-                graphics.DrawImage(Bodys[0], 0, 133);
-                graphics.DrawImage(Legs[0], 0, 237);
+                graphics.DrawImage(Bodys[0], 0, 135);
+                graphics.DrawImage(Legs[0], 0, 242);
                 graphics.Save();
             }
             tamagoci.Image = tamagoci.Image;
@@ -73,7 +73,7 @@ namespace bestAPPever
             {
                 if (curBody < Bodys.Count - 1) curBody++;
                     else curBody = 0;
-                graphics.DrawImage(Bodys[curBody], 0, 133);
+                graphics.DrawImage(Bodys[curBody], 0, 135);
                 tamagoci.Image = tamagoci.Image;
             }
         }
@@ -84,7 +84,7 @@ namespace bestAPPever
             {
                 if (curLegs < Legs.Count - 1) curLegs++;
                     else curLegs = 0;
-                graphics.DrawImage(Legs[curLegs], 0, 237);
+                graphics.DrawImage(Legs[curLegs], 0, 242);
                 tamagoci.Image = tamagoci.Image;
             }
         }
@@ -106,7 +106,7 @@ namespace bestAPPever
             {
                 if (curBody > 0) curBody--;
                 else curBody = Bodys.Count - 1;
-                graphics.DrawImage(Bodys[curBody], 0, 133);
+                graphics.DrawImage(Bodys[curBody], 0, 135);
                 tamagoci.Image = tamagoci.Image;
             }
         }
@@ -117,7 +117,7 @@ namespace bestAPPever
             {
                 if (curLegs > 0) curLegs--;
                 else curLegs = Legs.Count - 1;
-                graphics.DrawImage(Legs[curLegs], 0, 237);
+                graphics.DrawImage(Legs[curLegs], 0, 242);
                 tamagoci.Image = tamagoci.Image;
             }
         }

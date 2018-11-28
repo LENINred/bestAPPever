@@ -56,18 +56,19 @@ namespace bestAPPever
             }
         }
 
-        TamagochiClass tamagochiClass;
+        TamagochiEditor tamagochiClass;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
             if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
             {
                 this.Controls.RemoveByKey("labelLog");
                 RegLogInClass reglogInClass = new RegLogInClass();
-                KeyValuePair<bool[], string> pairLog = reglogInClass.checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-                this.Controls.Add(new CreateObjects().createLabel("Log", pairLog.Value, new System.Drawing.Point(12, 110)));
-                if (pairLog.Key[0])
+                //KeyValuePair<bool[], string> pairLog = reglogInClass.checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+                KeyValuePair<int, object>[] mas = reglogInClass.checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+                this.Controls.Add(new CreateObjects().createLabel("Log", (String)mas[3].Value, new System.Drawing.Point(12, 110)));
+                if ((Boolean)mas[1].Value)
                 {
-                    if (pairLog.Key[1])
+                    if ((Boolean)mas[2].Value)
                     {
                         //moveing to pers creation
                         //remove old objects and add new
@@ -82,12 +83,18 @@ namespace bestAPPever
             }
         }
 
+        TextBox textBoxPersName;
+        ComboBox comboBoxSex;
         private void persCreation()
         {
             this.Controls.Clear();
-            this.Controls.Add(new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12)));
-            this.Controls.Add(new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36)));
-            this.Controls.Add(new CreateObjects().createButton("persCreationOk", "Ok", new System.Drawing.Point(12, 370)));
+            textBoxPersName = new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12));
+            comboBoxSex = new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36));
+            this.Controls.Add(textBoxPersName);
+            this.Controls.Add(comboBoxSex);
+            Button persCreationOk = new CreateObjects().createButton("persCreationOk", "Ok", new System.Drawing.Point(12, 400));
+            persCreationOk.Click += PersCreationOk_Click;
+            this.Controls.Add(persCreationOk);
 
             PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(200, 85));
             headArrowNext.Click += HeadArrowNext_Click;
@@ -113,8 +120,37 @@ namespace bestAPPever
             legsArrowPrev.Click += LegsArrowPrev_Click;
             this.Controls.Add(legsArrowPrev);
 
-            tamagochiClass = new TamagochiClass(0, 0, 0);
+            tamagochiClass = new TamagochiEditor(0, 0, 0);
             this.Controls.Add(tamagochiClass.createTamagoci());
+        }
+
+        private void PersCreationOk_Click(object sender, EventArgs e)
+        {
+            this.Controls.RemoveByKey("labelLog");
+            string log = "";
+            if (textBoxPersName.Text.Length >= 4)
+            {
+                if(comboBoxSex.SelectedIndex != -1)
+                {
+                    if(new TamagochiStatus().firstAdd(textBoxPersName.Text, 0, comboBoxSex.SelectedIndex))
+                    {
+                        log += "Успешное создание персонажа";
+                    }
+                    else
+                    {
+                        log += "Ошибка создания персонажа";
+                    }
+                }
+                else
+                {
+                    log += "Выберите пол";
+                }
+            }
+            else
+            {
+                log += "Имя персонажа должно быть длиннее 4х символов";
+            }
+            this.Controls.Add(new CreateObjects().createLabel("Log", log, new System.Drawing.Point(12, 425)));
         }
 
         private void LegsArrowPrev_Click(object sender, EventArgs e)

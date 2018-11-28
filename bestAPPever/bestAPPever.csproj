@@ -57,7 +57,8 @@
     <Compile Include="RegLogInClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TamagochiClass.cs" />
+    <Compile Include="TamagochiEditor.cs" />
+    <Compile Include="TamagochiStatus.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,6 +98,15 @@
     <None Include="Resources\arrowLeftTap.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\body_5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\body_5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\body_5.bmp" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\head-1.png" />
   </ItemGroup>
   <ItemGroup>
@@ -109,13 +119,7 @@
     <None Include="Resources\head-4.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\body-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\body-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\body-3.png" />
+    <None Include="Resources\legs-1.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\legs-2.png" />
@@ -127,7 +131,13 @@
     <None Include="Resources\legs-4.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\legs-1.png" />
+    <None Include="Resources\body-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\body-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\body-3.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\body-4.png" />
