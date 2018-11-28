@@ -94,8 +94,8 @@ namespace bestAPPever
             comboBox.Name = "comboBox" + name;
             comboBox.Text = "Пол";
             comboBox.Size = new System.Drawing.Size(100, 12);
-            comboBox.Items.Add("Мужской");
             comboBox.Items.Add("Женский");
+            comboBox.Items.Add("Мужской");
             return comboBox;
         }
     }

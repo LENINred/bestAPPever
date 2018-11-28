@@ -39,10 +39,12 @@ namespace bestAPPever
             if (e.KeyChar == '\r') buttonLogIn.PerformClick();
         }
 
+        KeyValuePair<int, object>[] userData;
         private void ButtonReg_Click(object sender, System.EventArgs e)
         {
             if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
             {
+                userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
                 this.Controls.RemoveByKey("labelLog");
                 RegLogInClass reglogInClass = new RegLogInClass();
                 KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
@@ -50,37 +52,75 @@ namespace bestAPPever
                 if (pairLog.Key)
                 {
                     //moveing to pers creation
-                    //remove old objects and add new
+                    user_id = (int)userData[0].Value;
                     persCreation();
                 }
             }
         }
 
-        TamagochiEditor tamagochiClass;
+        TamagochiEditor tamagochiEditor;
+        int user_id;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
             if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
             {
                 this.Controls.RemoveByKey("labelLog");
-                RegLogInClass reglogInClass = new RegLogInClass();
-                //KeyValuePair<bool[], string> pairLog = reglogInClass.checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-                KeyValuePair<int, object>[] mas = reglogInClass.checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-                this.Controls.Add(new CreateObjects().createLabel("Log", (String)mas[3].Value, new System.Drawing.Point(12, 110)));
-                if ((Boolean)mas[1].Value)
+                userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+                this.Controls.Add(new CreateObjects().createLabel("Log", (String)userData[3].Value, new System.Drawing.Point(12, 110)));
+                if ((Boolean)userData[1].Value)
                 {
-                    if ((Boolean)mas[2].Value)
+                    user_id = (int)userData[0].Value;
+                    if (!(Boolean)userData[2].Value)
                     {
                         //moveing to pers creation
-                        //remove old objects and add new
                         persCreation();
                     }
                     else
                     {
                         //moveing to gaming
                         //remove old objects and add pers to screen
+                        startGame();
                     }
                 }
             }
+        }
+
+        private void startGame()
+        {
+            this.Controls.Clear();
+            string[] persStats = new TamagochiStatus().getPersStatus(user_id);
+            string name = "", sex = "", health = "", hungry = "", feeling = "", look = "";
+            name = persStats[0];
+            sex = persStats[1];
+            health = persStats[2];
+            hungry = persStats[3];
+            feeling = persStats[4];
+            look = persStats[5];
+
+            int i = 0;
+            int[] parts = new int[3];
+            string temp = "";
+            foreach (char ch in look)
+            {
+                if (ch != '&')
+                {
+                    temp += ch;
+                }
+                else
+                {
+                    parts[i] = short.Parse(temp);
+                    temp = "";
+                }
+            }
+
+
+            this.Controls.Add(new CreateObjects().createLabel("PersName", "Имя " + name, new System.Drawing.Point(12, 12)));
+            this.Controls.Add(new CreateObjects().createLabel("PersSex", "Пол " + sex, new System.Drawing.Point(100, 12)));
+            this.Controls.Add(new CreateObjects().createLabel("PersHealth", "Здоровье " + health, new System.Drawing.Point(150, 12)));
+            this.Controls.Add(new CreateObjects().createLabel("PersHungry", "Голод " + hungry, new System.Drawing.Point(12, 30)));
+            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Шта? " + feeling, new System.Drawing.Point(100, 30)));
+            tamagochiEditor = new TamagochiEditor(parts[0], parts[1], parts[2]);
+            this.Controls.Add(tamagochiEditor.createTamagoci());
         }
 
         TextBox textBoxPersName;
@@ -120,8 +160,8 @@ namespace bestAPPever
             legsArrowPrev.Click += LegsArrowPrev_Click;
             this.Controls.Add(legsArrowPrev);
 
-            tamagochiClass = new TamagochiEditor(0, 0, 0);
-            this.Controls.Add(tamagochiClass.createTamagoci());
+            tamagochiEditor = new TamagochiEditor(0, 0, 0);
+            this.Controls.Add(tamagochiEditor.createTamagoci());
         }
 
         private void PersCreationOk_Click(object sender, EventArgs e)
@@ -132,13 +172,13 @@ namespace bestAPPever
             {
                 if(comboBoxSex.SelectedIndex != -1)
                 {
-                    if(new TamagochiStatus().firstAdd(textBoxPersName.Text, 0, comboBoxSex.SelectedIndex))
+                    if(new TamagochiStatus().firstAdd(textBoxPersName.Text, user_id, comboBoxSex.SelectedIndex, persLook))
                     {
                         log += "Успешное создание персонажа";
                     }
                     else
                     {
-                        log += "Ошибка создания персонажа";
+                        log += "Ошибка создания персонажа(Имя занято)";
                     }
                 }
                 else
@@ -153,34 +193,35 @@ namespace bestAPPever
             this.Controls.Add(new CreateObjects().createLabel("Log", log, new System.Drawing.Point(12, 425)));
         }
 
+        int[] persLook = new int[3];
         private void LegsArrowPrev_Click(object sender, EventArgs e)
         {
-            tamagochiClass.prevLegs();
+            persLook[2] = tamagochiEditor.prevLegs();
         }
 
         private void BodyArrowPrev_Click(object sender, EventArgs e)
         {
-            tamagochiClass.prevBody();
+            persLook[1] = tamagochiEditor.prevBody();
         }
 
         private void HeadArrowPrev_Click(object sender, EventArgs e)
         {
-            tamagochiClass.prevHead();
+            persLook[0] = tamagochiEditor.prevHead();
         }
 
         private void HeadArrowNext_Click(object sender, EventArgs e)
         {
-            tamagochiClass.nextHead();
+            persLook[0] = tamagochiEditor.nextHead();
         }
 
         private void BodyArrowNext_Click(object sender, EventArgs e)
         {
-            tamagochiClass.nextBody();
+            persLook[1] = tamagochiEditor.nextBody();
         }
 
         private void LegsArrowNext_Click(object sender, EventArgs e)
         {
-            tamagochiClass.nextLegs();
+            persLook[2] = tamagochiEditor.nextLegs();
         }
 
         //Проверка валидности логина/пароля

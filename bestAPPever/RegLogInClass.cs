@@ -31,13 +31,13 @@ namespace bestAPPever
                     if (myDataReader.GetInt32(2) == 0)
                     {
                         loginSuccess = true;
-                        persIs = true;
+                        persIs = false;
                         message = "Успешный вход";
                     }
                     else
                     {
                         loginSuccess = true;
-                        persIs = false;
+                        persIs = true;
                         message = "Успешный вход";
                     }                    
                 }

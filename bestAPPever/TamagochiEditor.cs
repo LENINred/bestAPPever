@@ -28,7 +28,7 @@ namespace bestAPPever
         List<Image> Legs = new List<Image>();
         private void getImages()
         {
-            ResourceSet rsrcSet = bestAPPever.Properties.Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentCulture, false, true);
+            ResourceSet rsrcSet = bestAPPever.Properties.Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentCulture, true, true);
             foreach (DictionaryEntry entry in rsrcSet)
             {
                 String name = entry.Key.ToString();
@@ -47,16 +47,16 @@ namespace bestAPPever
             tamagoci.Image = new Bitmap(125, 328);
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
-                graphics.DrawImage(Heads[0], 0, 0);
-                graphics.DrawImage(Bodys[0], 0, 135);
-                graphics.DrawImage(Legs[0], 0, 242);
+                graphics.DrawImage(Heads[curHead], 0, 0);
+                graphics.DrawImage(Bodys[curBody], 0, 135);
+                graphics.DrawImage(Legs[curLegs], 0, 242);
                 graphics.Save();
             }
             tamagoci.Image = tamagoci.Image;
             return tamagoci;
         }
 
-        public void nextHead()
+        public int nextHead()
         {
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
@@ -64,10 +64,11 @@ namespace bestAPPever
                     else curHead = 0;
                 graphics.DrawImage(Heads[curHead], 0, 0);
                 tamagoci.Image = tamagoci.Image;
+                return curHead;
             }
         }
 
-        public void nextBody()
+        public int nextBody()
         {
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
@@ -75,10 +76,11 @@ namespace bestAPPever
                     else curBody = 0;
                 graphics.DrawImage(Bodys[curBody], 0, 135);
                 tamagoci.Image = tamagoci.Image;
+                return curBody; 
             }
         }
 
-        public void nextLegs()
+        public int nextLegs()
         {
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
@@ -86,10 +88,11 @@ namespace bestAPPever
                     else curLegs = 0;
                 graphics.DrawImage(Legs[curLegs], 0, 242);
                 tamagoci.Image = tamagoci.Image;
+                return curLegs;
             }
         }
 
-        public void prevHead()
+        public int prevHead()
         {
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
@@ -97,10 +100,11 @@ namespace bestAPPever
                 else curHead = Heads.Count - 1;
                 graphics.DrawImage(Heads[curHead], 0, 0);
                 tamagoci.Image = tamagoci.Image;
+                return curHead;
             }
         }
         
-        public void prevBody()
+        public int prevBody()
         {
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
@@ -108,10 +112,11 @@ namespace bestAPPever
                 else curBody = Bodys.Count - 1;
                 graphics.DrawImage(Bodys[curBody], 0, 135);
                 tamagoci.Image = tamagoci.Image;
+                return curBody;
             }
         }
 
-        public void prevLegs()
+        public int prevLegs()
         {
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))
             {
@@ -119,6 +124,7 @@ namespace bestAPPever
                 else curLegs = Legs.Count - 1;
                 graphics.DrawImage(Legs[curLegs], 0, 242);
                 tamagoci.Image = tamagoci.Image;
+                return curLegs;
             }
         }
     }

@@ -98,15 +98,6 @@
     <None Include="Resources\arrowLeftTap.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\body_5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\body_5.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\body_5.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\head-1.png" />
   </ItemGroup>
   <ItemGroup>
