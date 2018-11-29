@@ -13,55 +13,66 @@ namespace bestAPPever
         MySqlCommand myCommand;
         public KeyValuePair<int, object>[] checkLogin(string login, string pass)
         {
-            string message = "";
-            int user_id = 0;
-            bool loginSuccess = false;
-            bool persIs = false;
-            KeyValuePair<int, object>[] mas = new KeyValuePair<int, object>[4];            
-            try
+            KeyValuePair<int, object>[] mas = new KeyValuePair<int, object>[4];
+            if (checkTextBoxes(login, pass))
             {
-                myConnection = new MySqlConnection(Connect);
-                requestSQL = "SELECT `user_id`, `name`, `pers` FROM `users` WHERE `name` = '" + login + "' AND `password` = '" + pass + "'";                
-                myCommand = new MySqlCommand(requestSQL, myConnection);
-                myConnection.Open();
-                MySqlDataReader myDataReader = myCommand.ExecuteReader();
-                while (myDataReader.Read())
+                string message = "";
+                int user_id = 0;
+                bool loginSuccess = false;
+                bool persIs = false;
+                try
                 {
-                    user_id = myDataReader.GetInt32(0);
-                    if (myDataReader.GetInt32(2) == 0)
+                    myConnection = new MySqlConnection(Connect);
+                    requestSQL = "SELECT `user_id`, `name`, `pers` FROM `users` WHERE `name` = '" + login + "' AND `password` = '" + pass + "'";
+                    myCommand = new MySqlCommand(requestSQL, myConnection);
+                    myConnection.Open();
+                    MySqlDataReader myDataReader = myCommand.ExecuteReader();
+                    while (myDataReader.Read())
                     {
-                        loginSuccess = true;
-                        persIs = false;
-                        message = "Успешный вход";
+                        user_id = myDataReader.GetInt32(0);
+                        if (myDataReader.GetInt32(2) == 0)
+                        {
+                            loginSuccess = true;
+                            persIs = false;
+                            message = "Успешный вход";
+                        }
+                        else
+                        {
+                            loginSuccess = true;
+                            persIs = true;
+                            message = "Успешный вход";
+                        }
                     }
-                    else
+                    if (user_id == 0)
                     {
-                        loginSuccess = true;
-                        persIs = true;
-                        message = "Успешный вход";
-                    }                    
+                        message = "Пользователя не существует\nлибо логин и пароль\nвведены не верно";
+                    }
+
+                    mas[0] = new KeyValuePair<int, object>(0, user_id);
+                    mas[1] = new KeyValuePair<int, object>(1, loginSuccess);
+                    mas[2] = new KeyValuePair<int, object>(2, persIs);
+                    mas[3] = new KeyValuePair<int, object>(3, message);
+
+                    myDataReader.Close();
+                    myConnection.Close();
                 }
-                if(user_id == 0)
+                catch (Exception ex)
                 {
-                    message = "Пользователя не существует\nлибо логин и пароль\nвведены не верно";
+                    mas[0] = new KeyValuePair<int, object>(0, -1);
+                    mas[1] = new KeyValuePair<int, object>(1, false);
+                    mas[2] = new KeyValuePair<int, object>(2, false);
+                    mas[3] = new KeyValuePair<int, object>(3, ex.Message);
                 }
-
-                mas[0] = new KeyValuePair<int, object>(0, user_id);
-                mas[1] = new KeyValuePair<int, object>(1, loginSuccess);
-                mas[2] = new KeyValuePair<int, object>(2, persIs);
-                mas[3] = new KeyValuePair<int, object>(3, message);
-
-                myDataReader.Close();
-                myConnection.Close();
+                return mas;
             }
-            catch (Exception ex)
-            {                
+            else
+            {
                 mas[0] = new KeyValuePair<int, object>(0, -1);
                 mas[1] = new KeyValuePair<int, object>(1, false);
                 mas[2] = new KeyValuePair<int, object>(2, false);
-                mas[3] = new KeyValuePair<int, object>(3, ex.Message);
+                mas[3] = new KeyValuePair<int, object>(3, log);
+                return mas;
             }
-            return mas;
         }
         
         private bool checkLogin(string login)
@@ -91,31 +102,72 @@ namespace bestAPPever
             return false;
         }
 
+        //Проверка валидности логина/пароля
+        string log = "";
+        private bool checkTextBoxes(string login, string password)
+        {
+            bool check = true;
+            string symbols = "\"+,'{}[]()-*&?^:\\/%$;#№@!`~<>| ";
+            foreach (char ch in login)
+            {
+                if (symbols.Contains(ch.ToString()))
+                {
+                    log += "Вы ввели недопустимый символ в имени\n";
+                    check = false;
+                    break;
+                }
+            }
+            if ((login == "") || (login.Length < 3))
+            {
+                log += "Имя должно содержать больше 3-х символов\n";
+                check = false;
+            }
+            if (password.Contains(" "))
+            {
+                log += "Пароль не может содержать пробелов\n";
+                check = false;
+            }
+
+            if ((password == "") || (password.Length < 6))
+            {
+                log += "Пароль должен состоять из 6-сьти и более символов\n";
+                check = false;
+            }
+            return check;
+        }
+
         public KeyValuePair<Boolean, string> regisrUser(string login, string pass)
         {
             KeyValuePair<Boolean, string> pairLog;
-            if (!checkLogin(login))
+            if (checkTextBoxes(login, pass))
             {
-                try
+                if (!checkLogin(login))
                 {
-                    myConnection = new MySqlConnection(Connect);
-                    requestSQL = "INSERT INTO `users`(`name`, `password`, `pers`) VALUES ('" + login + "','" + pass + "', 0)";
-                    myCommand = new MySqlCommand(requestSQL, myConnection);
-                    myConnection.Open();
-                    myCommand.ExecuteScalar();
-                    pairLog = new KeyValuePair<bool, string>(true, "Регистрация успешна");
-                    myConnection.Close();
+                    try
+                    {
+                        myConnection = new MySqlConnection(Connect);
+                        requestSQL = "INSERT INTO `users`(`name`, `password`, `pers`) VALUES ('" + login + "','" + pass + "', 0)";
+                        myCommand = new MySqlCommand(requestSQL, myConnection);
+                        myConnection.Open();
+                        myCommand.ExecuteScalar();
+                        pairLog = new KeyValuePair<bool, string>(true, "Регистрация успешна");
+                        myConnection.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        pairLog = new KeyValuePair<bool, string>(false, ex.Message);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    pairLog = new KeyValuePair<bool, string>(false, ex.Message);
+                    pairLog = new KeyValuePair<bool, string>(false, "Пользователь уже существует");
                 }
+                return pairLog;
             }
             else
             {
-                pairLog = new KeyValuePair<bool, string>(false, "Пользователь уже существует");
+                return new KeyValuePair<bool, string>(false, log);
             }
-            return pairLog;
         }
     }
 }

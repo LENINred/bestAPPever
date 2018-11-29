@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -14,6 +15,7 @@ namespace bestAPPever
         TextBox textBoxLogin;
         TextBox textBoxPassword;
         Button buttonLogIn;
+        string Login = "";
         private void buttonRegLog_Click(object sender, System.EventArgs e)
         {
             buttonRegLog.Visible = false;
@@ -42,19 +44,16 @@ namespace bestAPPever
         KeyValuePair<int, object>[] userData;
         private void ButtonReg_Click(object sender, System.EventArgs e)
         {
-            if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
+            userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+            RegLogInClass reglogInClass = new RegLogInClass();
+            KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
+            this.Controls.RemoveByKey("statusStrip");
+            this.Controls.Add(new CreateObjects().createStatusStrip("Log", pairLog.Value));
+            if (pairLog.Key)
             {
-                userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-                this.Controls.RemoveByKey("labelLog");
-                RegLogInClass reglogInClass = new RegLogInClass();
-                KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
-                this.Controls.Add(new CreateObjects().createLabel("Log", pairLog.Value, new System.Drawing.Point(12, 110)));
-                if (pairLog.Key)
-                {
-                    //moveing to pers creation
-                    user_id = (int)userData[0].Value;
-                    persCreation();
-                }
+                //moveing to pers creation
+                user_id = (int)userData[0].Value;
+                persCreation();
             }
         }
 
@@ -62,29 +61,28 @@ namespace bestAPPever
         int user_id;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
-            if (checkTextBoxes(textBoxLogin.Text, textBoxPassword.Text))
+            this.Controls.RemoveByKey("statusStrip");
+            userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+
+            this.Controls.Add(new CreateObjects().createStatusStrip("Log", (String)userData[3].Value));
+            if ((Boolean)userData[1].Value)
             {
-                this.Controls.RemoveByKey("labelLog");
-                userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-                this.Controls.Add(new CreateObjects().createLabel("Log", (String)userData[3].Value, new System.Drawing.Point(12, 110)));
-                if ((Boolean)userData[1].Value)
+                user_id = (int)userData[0].Value;
+                if (!(Boolean)userData[2].Value)
                 {
-                    user_id = (int)userData[0].Value;
-                    if (!(Boolean)userData[2].Value)
-                    {
-                        //moveing to pers creation
-                        persCreation();
-                    }
-                    else
-                    {
-                        //moveing to gaming
-                        //remove old objects and add pers to screen
-                        startGame();
-                    }
+                    //moveing to pers creation
+                    persCreation();
+                }
+                else
+                {
+                    //moveing to gaming
+                    //remove old objects and add pers to screen
+                    Login = textBoxLogin.Text;
+                    startGame();
                 }
             }
         }
-
+        
         private void startGame()
         {
             this.Controls.Clear();
@@ -112,15 +110,35 @@ namespace bestAPPever
                     temp = "";
                 }
             }
-
+            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(600, 12));
+            buttonMenu.Anchor = AnchorStyles.Right;
+            buttonMenu.Size = new Size(44, 22);
+            this.Controls.Add(buttonMenu);
+            buttonMenu.Click += ButtonMenu_Click;
 
             this.Controls.Add(new CreateObjects().createLabel("PersName", "Имя " + name, new System.Drawing.Point(12, 12)));
             this.Controls.Add(new CreateObjects().createLabel("PersSex", "Пол " + sex, new System.Drawing.Point(100, 12)));
             this.Controls.Add(new CreateObjects().createLabel("PersHealth", "Здоровье " + health, new System.Drawing.Point(150, 12)));
             this.Controls.Add(new CreateObjects().createLabel("PersHungry", "Голод " + hungry, new System.Drawing.Point(12, 30)));
-            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Шта? " + feeling, new System.Drawing.Point(100, 30)));
+            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Настроение " + feeling, new System.Drawing.Point(100, 30)));
             tamagochiEditor = new TamagochiEditor(parts[0], parts[1], parts[2]);
             this.Controls.Add(tamagochiEditor.createTamagoci());
+        }
+
+        Panel panelMenu = new Panel();
+        private void ButtonMenu_Click(object sender, EventArgs e)
+        {
+            if (panelMenu.Name != "panelMenu")
+            {
+                panelMenu = new CreateObjects().createMenu(Login, new System.Drawing.Point(460, 45));
+                this.Controls.Add(panelMenu);
+            }
+            else
+            {
+                this.Controls.Remove(panelMenu);
+                this.Controls.RemoveByKey("panelUsers");
+                panelMenu.Name = "null";
+            }
         }
 
         TextBox textBoxPersName;
@@ -163,35 +181,7 @@ namespace bestAPPever
             tamagochiEditor = new TamagochiEditor(0, 0, 0);
             this.Controls.Add(tamagochiEditor.createTamagoci());
         }
-
-        private void PersCreationOk_Click(object sender, EventArgs e)
-        {
-            this.Controls.RemoveByKey("labelLog");
-            string log = "";
-            if (textBoxPersName.Text.Length >= 4)
-            {
-                if(comboBoxSex.SelectedIndex != -1)
-                {
-                    if(new TamagochiStatus().firstAdd(textBoxPersName.Text, user_id, comboBoxSex.SelectedIndex, persLook))
-                    {
-                        log += "Успешное создание персонажа";
-                    }
-                    else
-                    {
-                        log += "Ошибка создания персонажа(Имя занято)";
-                    }
-                }
-                else
-                {
-                    log += "Выберите пол";
-                }
-            }
-            else
-            {
-                log += "Имя персонажа должно быть длиннее 4х символов";
-            }
-            this.Controls.Add(new CreateObjects().createLabel("Log", log, new System.Drawing.Point(12, 425)));
-        }
+        
 
         int[] persLook = new int[3];
         private void LegsArrowPrev_Click(object sender, EventArgs e)
@@ -224,40 +214,34 @@ namespace bestAPPever
             persLook[2] = tamagochiEditor.nextLegs();
         }
 
-        //Проверка валидности логина/пароля
-        private bool checkTextBoxes(string login, string password)
+        // Проверка валидности создания персонажа
+        private void PersCreationOk_Click(object sender, EventArgs e)
         {
-            this.Controls.RemoveByKey("labelLog");
+            this.Controls.RemoveByKey("statusStrip");
             string log = "";
-            bool check = true;
-            string symbols = "\"+,'{}[]()-*&?^:\\/%$;#№@!`~<>| ";
-            foreach(char ch in login)
+            if (textBoxPersName.Text.Length >= 4)
             {
-                if (symbols.Contains(ch.ToString()))
+                if (comboBoxSex.SelectedIndex != -1)
                 {
-                    log += "Вы ввели недопустимый символ в имени\n";
-                    check = false;
-                    break;
-                }               
+                    if (new TamagochiStatus().firstAdd(textBoxPersName.Text, user_id, comboBoxSex.SelectedIndex, persLook))
+                    {
+                        log += "Успешное создание персонажа";
+                    }
+                    else
+                    {
+                        log += "Ошибка создания персонажа(Имя занято)";
+                    }
+                }
+                else
+                {
+                    log += "Выберите пол";
+                }
             }
-            if ((login == "") || (login.Length < 3))
+            else
             {
-                log += "Имя должно содержать больше 3-х символов\n";
-                check = false;
+                log += "Имя персонажа должно быть длиннее 4х символов";
             }
-            if (password.Contains(" "))
-            {
-                log += "Пароль не может содержать пробелов\n";
-                check = false;
-            }
-
-            if ((password == "") || (password.Length < 6))
-            {
-                log += "Пароль должен состоять из 6-сьти и более символов\n";
-                check = false;
-            }
-            this.Controls.Add(new CreateObjects().createLabel("Log", log, new System.Drawing.Point(12, 110)));
-            return check;
+            this.Controls.Add(new CreateObjects().createStatusStrip("Log", log));
         }
 
         private void FormFirst_Load(object sender, System.EventArgs e)

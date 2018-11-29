@@ -42,7 +42,8 @@
             // 
             // buttonRegLog
             // 
-            this.buttonRegLog.Location = new System.Drawing.Point(12, 12);
+            this.buttonRegLog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.buttonRegLog.Location = new System.Drawing.Point(32, 187);
             this.buttonRegLog.Name = "buttonRegLog";
             this.buttonRegLog.Size = new System.Drawing.Size(100, 54);
             this.buttonRegLog.TabIndex = 2;
@@ -54,7 +55,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 492);
+            this.ClientSize = new System.Drawing.Size(664, 464);
             this.Controls.Add(this.buttonRegLog);
             this.Controls.Add(this.label1);
             this.Name = "FormFirst";
