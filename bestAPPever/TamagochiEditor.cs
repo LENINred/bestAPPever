@@ -42,7 +42,7 @@ namespace bestAPPever
         {
             tamagoci = new PictureBox();
             tamagoci.Size = new Size(125, 328);
-            tamagoci.Location = new Point(12, 70);
+            tamagoci.Location = new Point(150, 70);
             tamagoci.BorderStyle = BorderStyle.FixedSingle;
             tamagoci.Image = new Bitmap(125, 328);
             using (Graphics graphics = Graphics.FromImage(tamagoci.Image))

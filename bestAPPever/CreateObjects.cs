@@ -119,10 +119,10 @@ namespace bestAPPever
         {
             panel = new Panel();
 
-            Label labelLogin = createLabel("UserLogin", login, new Point(10, 10));
-            Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(10, 24));
-            Button buttoтFindFriends = createButton("FindFriends", "Поиск друзей", new Point(10, 48));
-            Button buttonExit = createButton("Exit", "Выход", new Point(10, 72));
+            Label labelLogin = createLabel("UserLogin", login, new Point(80, 30));
+            Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(50, 60));
+            Button buttoтFindFriends = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
+            Button buttonExit = createButton("Exit", "Выход", new Point(50, 115));
 
             panel.Controls.Add(labelLogin);
             panel.Controls.Add(buttonListFriends);

@@ -43,9 +43,9 @@
             // buttonRegLog
             // 
             this.buttonRegLog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.buttonRegLog.Location = new System.Drawing.Point(32, 187);
+            this.buttonRegLog.Location = new System.Drawing.Point(290, 200);
             this.buttonRegLog.Name = "buttonRegLog";
-            this.buttonRegLog.Size = new System.Drawing.Size(100, 54);
+            this.buttonRegLog.Size = new System.Drawing.Size(100, 50);
             this.buttonRegLog.TabIndex = 2;
             this.buttonRegLog.Text = "Регистрация/\r\nВход";
             this.buttonRegLog.UseVisualStyleBackColor = true;
@@ -55,10 +55,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(664, 464);
+            this.ClientSize = new System.Drawing.Size(664, 461);
             this.Controls.Add(this.buttonRegLog);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FormFirst";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вход";
             this.Load += new System.EventHandler(this.FormFirst_Load);
             this.ResumeLayout(false);

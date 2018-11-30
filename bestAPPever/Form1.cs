@@ -20,10 +20,10 @@ namespace bestAPPever
         {
             buttonRegLog.Visible = false;
 
-            this.Controls.Add(new CreateObjects().createTextBox("Login", new System.Drawing.Point(12, 12)));
-            this.Controls.Add(new CreateObjects().createTextBox("Pass", new System.Drawing.Point(12, 36), true));
-            this.Controls.Add(new CreateObjects().createButton("LogIn", "Войти", new System.Drawing.Point(12, 60)));
-            this.Controls.Add(new CreateObjects().createButton("Registration", "Регистрация", new System.Drawing.Point(12, 85)));
+            this.Controls.Add(new CreateObjects().createTextBox("Login", new System.Drawing.Point(290, 190)));
+            this.Controls.Add(new CreateObjects().createTextBox("Pass", new System.Drawing.Point(290, 215), true));
+            this.Controls.Add(new CreateObjects().createButton("LogIn", "Войти", new System.Drawing.Point(290, 245)));
+            this.Controls.Add(new CreateObjects().createButton("Registration", "Регистрация", new System.Drawing.Point(290, 269)));
 
             buttonLogIn = (Button)this.Controls.Find("buttonLogIn", true).GetValue(0);
             buttonLogIn.Click += buttonLogIn_Click;
@@ -110,17 +110,17 @@ namespace bestAPPever
                     temp = "";
                 }
             }
-            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(600, 12));
+            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
             buttonMenu.Size = new Size(44, 22);
             this.Controls.Add(buttonMenu);
             buttonMenu.Click += ButtonMenu_Click;
 
-            this.Controls.Add(new CreateObjects().createLabel("PersName", "Имя " + name, new System.Drawing.Point(12, 12)));
-            this.Controls.Add(new CreateObjects().createLabel("PersSex", "Пол " + sex, new System.Drawing.Point(100, 12)));
-            this.Controls.Add(new CreateObjects().createLabel("PersHealth", "Здоровье " + health, new System.Drawing.Point(150, 12)));
-            this.Controls.Add(new CreateObjects().createLabel("PersHungry", "Голод " + hungry, new System.Drawing.Point(12, 30)));
-            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Настроение " + feeling, new System.Drawing.Point(100, 30)));
+            this.Controls.Add(new CreateObjects().createLabel("PersName", "Имя: " + name, new System.Drawing.Point(10, 70)));
+            this.Controls.Add(new CreateObjects().createLabel("PersSex", "Пол: " + sex, new System.Drawing.Point(10, 100)));
+            this.Controls.Add(new CreateObjects().createLabel("PersHealth", "Здоровье: " + health, new System.Drawing.Point(10, 130)));
+            this.Controls.Add(new CreateObjects().createLabel("PersHungry", "Голод: " + hungry, new System.Drawing.Point(10, 160)));
+            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Настроение: " + feeling, new System.Drawing.Point(10, 190)));
             tamagochiEditor = new TamagochiEditor(parts[0], parts[1], parts[2]);
             this.Controls.Add(tamagochiEditor.createTamagoci());
         }
@@ -154,27 +154,27 @@ namespace bestAPPever
             persCreationOk.Click += PersCreationOk_Click;
             this.Controls.Add(persCreationOk);
 
-            PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(200, 85));
+            PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(290, 140));
             headArrowNext.Click += HeadArrowNext_Click;
             this.Controls.Add(headArrowNext);
 
-            PictureBox bodyArrowNext = new CreateObjects().createArrow("body", "arrowRight", new System.Drawing.Point(200, 185));
+            PictureBox bodyArrowNext = new CreateObjects().createArrow("body", "arrowRight", new System.Drawing.Point(290, 250));
             bodyArrowNext.Click += BodyArrowNext_Click;
             this.Controls.Add(bodyArrowNext);
 
-            PictureBox legsArrowNext = new CreateObjects().createArrow("legs", "arrowRight", new System.Drawing.Point(200, 300));
+            PictureBox legsArrowNext = new CreateObjects().createArrow("legs", "arrowRight", new System.Drawing.Point(290, 340));
             legsArrowNext.Click += LegsArrowNext_Click;
             this.Controls.Add(legsArrowNext);
 
-            PictureBox headArrowPrev = new CreateObjects().createArrow("head", "arrowLeft", new System.Drawing.Point(150, 85));
+            PictureBox headArrowPrev = new CreateObjects().createArrow("head", "arrowLeft", new System.Drawing.Point(100, 140));
             headArrowPrev.Click += HeadArrowPrev_Click;
             this.Controls.Add(headArrowPrev);
 
-            PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "arrowLeft", new System.Drawing.Point(150, 185));
+            PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "arrowLeft", new System.Drawing.Point(100, 250));
             bodyArrowPrev.Click += BodyArrowPrev_Click;
             this.Controls.Add(bodyArrowPrev);
 
-            PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(150, 300));
+            PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(100, 340));
             legsArrowPrev.Click += LegsArrowPrev_Click;
             this.Controls.Add(legsArrowPrev);
 
