@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -112,7 +113,7 @@ namespace bestAPPever
             comboBox.Items.Add("Мужской");
             return comboBox;
         }
-
+        
         //Создание Меню
         Panel panel;
         public Panel createMenu(string login, Point location)
@@ -134,36 +135,61 @@ namespace bestAPPever
             panel.Location = location;
             panel.LocationChanged += Panel_LocationChanged;
 
-            buttonListFriends.Click += ButtonListFriends_Click;
+            buttoтFindFriends.Click += ButtoтFindFriends_Click;
 
             return panel;
         }
 
         private void Panel_LocationChanged(object sender, System.EventArgs e)
         {
-            groupUsers.Location = new Point(panel.Location.X - groupUsers.Size.Width, 0);
+            panelUsers.Location = new Point(panel.Location.X - panelUsers.Size.Width, 0);
         }
-
-        GroupBox groupUsers = new GroupBox();
-        public GroupBox createUsersPanel()
+        
+        public GroupBox createUsersGroupBox()
         {
-            //_panel.BorderStyle = BorderStyle.FixedSingle;
+            GroupBox groupUsers = new GroupBox();
             groupUsers.Name = "panelUsers";
-            groupUsers.Text = "Люди";
+            groupUsers.Text = "Поиск людей";
             groupUsers.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
             groupUsers.Location = new Point(panel.Location.X - groupUsers.Size.Width, 0);
+                        
+
             return groupUsers;
         }
 
+        private void createListUsers(List<string> listUsers)
+        {
+            int y = 20;
+            foreach (string user in listUsers)
+            {
+                Label nameUser = new Label();
+                Button buttonAdd = new Button();
+
+                nameUser.Text = user;
+                nameUser.AutoSize = true;
+                nameUser.Location = new Point(10, y + 5);
+
+                buttonAdd.Size = new Size(30, 25);
+                buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonAdd.Text = "+";
+                buttonAdd.Location = new Point(75, y);
+
+                panelUsers.Controls.Add(nameUser);
+                panelUsers.Controls.Add(buttonAdd);
+                y += 30;
+            }
+        }
+
         GroupBox panelUsers = new GroupBox();
-        private void ButtonListFriends_Click(object sender, System.EventArgs e)
+        private void ButtoтFindFriends_Click(object sender, System.EventArgs e)
         {
             Form form = (Form)panel.GetContainerControl();
             
             if(panelUsers.Name != "panelUsers")
             {
-                panelUsers = createUsersPanel();
+                panelUsers = createUsersGroupBox();
                 form.Controls.Add(panelUsers);
+                createListUsers(new ListUsers().getListUsers());
             }
             else
             {

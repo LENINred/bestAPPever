@@ -136,9 +136,9 @@ namespace bestAPPever
             return check;
         }
 
-        public KeyValuePair<Boolean, string> regisrUser(string login, string pass)
+        public KeyValuePair<int, object>[] regisrUser(string login, string pass)
         {
-            KeyValuePair<Boolean, string> pairLog;
+            KeyValuePair<int, object>[] mas = new KeyValuePair<int, object>[3];
             if (checkTextBoxes(login, pass))
             {
                 if (!checkLogin(login))
@@ -146,27 +146,32 @@ namespace bestAPPever
                     try
                     {
                         myConnection = new MySqlConnection(Connect);
-                        requestSQL = "INSERT INTO `users`(`name`, `password`, `pers`) VALUES ('" + login + "','" + pass + "', 0)";
+                        requestSQL = "INSERT INTO `users`(`name`, `password`, `pers`) VALUES ('" + login + "','" + pass + "', 0);" +
+                        "\nSELECT  `user_id` FROM `users` WHERE  `name` ='" + login+"'";
                         myCommand = new MySqlCommand(requestSQL, myConnection);
                         myConnection.Open();
-                        myCommand.ExecuteScalar();
-                        pairLog = new KeyValuePair<bool, string>(true, "Регистрация успешна");
+                        var user_id = myCommand.ExecuteScalar();
+                        mas[0] = new KeyValuePair<int, object>(0, "Регистрация успешна");
+                        mas[1] = new KeyValuePair<int, object>(1, true);
+                        mas[2] = new KeyValuePair<int, object>(2, user_id);
                         myConnection.Close();
                     }
                     catch (Exception ex)
                     {
-                        pairLog = new KeyValuePair<bool, string>(false, ex.Message);
+                        mas[0] = new KeyValuePair<int, object>(0, ex.Message);
+                        mas[1] = new KeyValuePair<int, object>(1, false);
                     }
                 }
                 else
                 {
-                    pairLog = new KeyValuePair<bool, string>(false, "Пользователь уже существует");
+                    mas[0] = new KeyValuePair<int, object>(0, "Пользователь уже существует");
+                    mas[1] = new KeyValuePair<int, object>(1, false);
                 }
-                return pairLog;
+                return mas;
             }
             else
             {
-                return new KeyValuePair<bool, string>(false, log);
+                return mas;
             }
         }
     }

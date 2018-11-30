@@ -10,9 +10,9 @@ namespace bestAPPever
 {
     class TamagochiEditor
     {
-        private int curHead;
-        private int curBody;
-        private int curLegs;
+        private int curHead = 0;
+        private int curBody = 0;
+        private int curLegs = 0;
         private PictureBox tamagoci;
 
         public TamagochiEditor(int head, int body, int legs)

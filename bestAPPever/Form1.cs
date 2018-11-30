@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -17,23 +18,19 @@ namespace bestAPPever
         Button buttonLogIn;
         TextBox textBoxPersName;
         ComboBox comboBoxSex;
-        KeyValuePair<int, object>[] userData;
         int user_id;
         string Login = "";
         private void FormFirst_Load(object sender, System.EventArgs e)
         {
-            
-        }
-
-        private void getGlobals()
-        {
-            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
-            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
-            userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-            user_id = (int)userData[0].Value;
+            //--            
         }
         
         private void buttonRegLog_Click(object sender, System.EventArgs e)
+        {
+            showFormRegLog();            
+        }
+
+        private void showFormRegLog()
         {
             buttonRegLog.Visible = false;
 
@@ -48,9 +45,19 @@ namespace bestAPPever
             Button buttonReg = (Button)this.Controls.Find("buttonRegistration", true).GetValue(0);
             buttonReg.Click += ButtonReg_Click;
 
-            getGlobals();
+            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
+            textBoxLogin.Focus();
+            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
 
+            textBoxLogin.KeyPress += TextBoxPassword_KeyPress;
             textBoxPassword.KeyPress += TextBoxPassword_KeyPress;
+
+            string[] restoredLogPass = restoreLogin();
+            if (restoredLogPass != null)
+            {
+                textBoxLogin.Text = restoredLogPass[0];
+                textBoxPassword.Text = restoredLogPass[1];
+            }
         }
 
         private void TextBoxPassword_KeyPress(object sender, KeyPressEventArgs e)
@@ -60,30 +67,32 @@ namespace bestAPPever
         
         private void ButtonReg_Click(object sender, System.EventArgs e)
         {
-            getGlobals();
-
+            this.Text = "Регистрация";
             RegLogInClass reglogInClass = new RegLogInClass();
-            KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
+            KeyValuePair<int, object>[] userData = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
+            user_id = short.Parse(userData[2].Value.ToString());
+
             this.Controls.RemoveByKey("statusStrip");
-            this.Controls.Add(new CreateObjects().createStatusStrip("Log", pairLog.Value));
-            if (pairLog.Key)
+            this.Controls.Add(new CreateObjects().createStatusStrip("Log", (String)userData[0].Value));
+
+            if ((Boolean)userData[1].Value)
             {
                 //moveing to pers creation
-                
                 persCreation();
             }
         }
 
         TamagochiEditor tamagochiEditor;
-        
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
             this.Controls.RemoveByKey("statusStrip");
-            getGlobals();
+            KeyValuePair<int, object>[] userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+            user_id = short.Parse(userData[0].Value.ToString());
 
             this.Controls.Add(new CreateObjects().createStatusStrip("Log", (String)userData[3].Value));
             if ((Boolean)userData[1].Value)
             {
+                saveLogin(textBoxLogin.Text, textBoxPassword.Text);
                 if (!(Boolean)userData[2].Value)
                 {
                     //moveing to pers creation
@@ -96,6 +105,36 @@ namespace bestAPPever
                     Login = textBoxLogin.Text;
                     startGame();
                 }
+            }
+            this.Text = "Игра";
+        }
+
+        private void saveLogin(string login, string pass)
+        {
+            string writePath = @"login.txt";
+            using (StreamWriter sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
+            {
+                sw.WriteLine(login);
+                sw.WriteLine(pass);
+            }
+        }
+
+        private string[] restoreLogin()
+        {
+            string path = @"login.txt";
+            try
+            {
+                using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+                {
+                    string[] lp = new string[2];
+                    lp[0] = sr.ReadLine();
+                    lp[1] = sr.ReadLine();
+                    return lp;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
         
@@ -110,9 +149,8 @@ namespace bestAPPever
             hungry = persStats[3];
             feeling = persStats[4];
             look = persStats[5];
-
             int i = 0;
-            int[] parts = new int[3];
+            List<int> parts = new List<int>();
             string temp = "";
             foreach (char ch in look)
             {
@@ -122,9 +160,10 @@ namespace bestAPPever
                 }
                 else
                 {
-                    parts[i] = short.Parse(temp);
+                    parts.Add(short.Parse(temp));
                     temp = "";
                 }
+                
             }
             Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
@@ -141,6 +180,13 @@ namespace bestAPPever
             this.Controls.Add(tamagochiEditor.createTamagoci());
         }
 
+        private void ButtonExit_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            showFormRegLog();
+            this.Text = "Вход";
+        }
+
         Panel panelMenu = new Panel();
         private void ButtonMenu_Click(object sender, EventArgs e)
         {
@@ -148,6 +194,12 @@ namespace bestAPPever
             {
                 panelMenu = new CreateObjects().createMenu(Login, new System.Drawing.Point(460, 45));
                 this.Controls.Add(panelMenu);
+                Button buttonExit = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
+                buttonExit.Click += ButtonExit_Click;
+
+                Button buttonFindFriends = (Button)this.Controls.Find("buttonFindFriends", true).GetValue(0);
+                buttonFindFriends.Click += ButtonFindFriends_Click;
+                
             }
             else
             {
@@ -157,8 +209,14 @@ namespace bestAPPever
             }
         }
 
+        private void ButtonFindFriends_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void persCreation()
         {
+            this.Text = "Создание персонажа";
             this.Controls.Clear();
             textBoxPersName = new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12));
             comboBoxSex = new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36));
@@ -191,6 +249,12 @@ namespace bestAPPever
             PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(100, 340));
             legsArrowPrev.Click += LegsArrowPrev_Click;
             this.Controls.Add(legsArrowPrev);
+
+            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
+            buttonMenu.Anchor = AnchorStyles.Right;
+            buttonMenu.Size = new Size(44, 22);
+            this.Controls.Add(buttonMenu);
+            buttonMenu.Click += ButtonMenu_Click;
 
             tamagochiEditor = new TamagochiEditor(0, 0, 0);
             this.Controls.Add(tamagochiEditor.createTamagoci());
@@ -240,6 +304,7 @@ namespace bestAPPever
                     if (new TamagochiStatus().firstAdd(textBoxPersName.Text, user_id, comboBoxSex.SelectedIndex, persLook))
                     {
                         log += "Успешное создание персонажа";
+                        startGame();
                     }
                     else
                     {
@@ -256,6 +321,7 @@ namespace bestAPPever
                 log += "Имя персонажа должно быть длиннее 4х символов";
             }
             this.Controls.Add(new CreateObjects().createStatusStrip("Log", log));
+            this.Text = "Игра";
         }
 
     }
