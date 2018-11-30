@@ -72,7 +72,7 @@ namespace bestAPPever
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection(Connect);
-                    string requestSQL = "INSERT INTO `tamagoches`(`name`, `user_id`, `sex`, `health`, `hungry`, `feeling`, `look`) VALUES ('" + name + "','" + userId + "','" + sex + "','50','50','50','" + persLookS + "');" +
+                    string requestSQL = "INSERT INTO `tamagoches`(`name`, `user_id`, `sex`, `health`, `hungry`, `feeling`, `look`) VALUES ('" + name + "'," + userId + ",'" + sex + "','50','50','50','" + persLookS + "');"+
                         "\nUPDATE  `users` SET  `pers` =1 WHERE  `user_id` =" + userId;
                     MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                     myConnection.Open();

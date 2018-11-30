@@ -15,7 +15,24 @@ namespace bestAPPever
         TextBox textBoxLogin;
         TextBox textBoxPassword;
         Button buttonLogIn;
+        TextBox textBoxPersName;
+        ComboBox comboBoxSex;
+        KeyValuePair<int, object>[] userData;
+        int user_id;
         string Login = "";
+        private void FormFirst_Load(object sender, System.EventArgs e)
+        {
+            
+        }
+
+        private void getGlobals()
+        {
+            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
+            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
+            userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+            user_id = (int)userData[0].Value;
+        }
+        
         private void buttonRegLog_Click(object sender, System.EventArgs e)
         {
             buttonRegLog.Visible = false;
@@ -31,8 +48,8 @@ namespace bestAPPever
             Button buttonReg = (Button)this.Controls.Find("buttonRegistration", true).GetValue(0);
             buttonReg.Click += ButtonReg_Click;
 
-            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
-            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
+            getGlobals();
+
             textBoxPassword.KeyPress += TextBoxPassword_KeyPress;
         }
 
@@ -40,11 +57,11 @@ namespace bestAPPever
         {
             if (e.KeyChar == '\r') buttonLogIn.PerformClick();
         }
-
-        KeyValuePair<int, object>[] userData;
+        
         private void ButtonReg_Click(object sender, System.EventArgs e)
         {
-            userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+            getGlobals();
+
             RegLogInClass reglogInClass = new RegLogInClass();
             KeyValuePair<Boolean, string> pairLog = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
             this.Controls.RemoveByKey("statusStrip");
@@ -52,22 +69,21 @@ namespace bestAPPever
             if (pairLog.Key)
             {
                 //moveing to pers creation
-                user_id = (int)userData[0].Value;
+                
                 persCreation();
             }
         }
 
         TamagochiEditor tamagochiEditor;
-        int user_id;
+        
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
             this.Controls.RemoveByKey("statusStrip");
-            userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
+            getGlobals();
 
             this.Controls.Add(new CreateObjects().createStatusStrip("Log", (String)userData[3].Value));
             if ((Boolean)userData[1].Value)
             {
-                user_id = (int)userData[0].Value;
                 if (!(Boolean)userData[2].Value)
                 {
                     //moveing to pers creation
@@ -141,8 +157,6 @@ namespace bestAPPever
             }
         }
 
-        TextBox textBoxPersName;
-        ComboBox comboBoxSex;
         private void persCreation()
         {
             this.Controls.Clear();
@@ -244,9 +258,5 @@ namespace bestAPPever
             this.Controls.Add(new CreateObjects().createStatusStrip("Log", log));
         }
 
-        private void FormFirst_Load(object sender, System.EventArgs e)
-        {
-
-        }
     }
 }
