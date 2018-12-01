@@ -77,7 +77,7 @@ namespace bestAPPever
             if ((Boolean)userData[1].Value)
             {
                 //moveing to pers creation
-                this.Text = "Регистрация";
+                this.Text = "Создание персонажа";
                 persCreation();
             }
         }
@@ -85,17 +85,18 @@ namespace bestAPPever
         TamagochiEditor tamagochiEditor;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
-            KeyValuePair<int, object>[] userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
-            user_id = short.Parse(userData[0].Value.ToString());
+            KeyValuePair<int, object>[] userData = new RegLogInClass().tryToLogIn(textBoxLogin.Text, textBoxPassword.Text);
+            user_id = short.Parse(userData[2].Value.ToString());
             
-            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (String)userData[3].Value;
+            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (String)userData[0].Value;
 
             if ((Boolean)userData[1].Value)
             {
                 saveLogin(textBoxLogin.Text, textBoxPassword.Text);
-                if (!(Boolean)userData[2].Value)
+                if (!(Boolean)userData[3].Value)
                 {
                     //moveing to pers creation
+                    this.Text = "Создание персонажа";
                     persCreation();
                 }
                 else
@@ -126,10 +127,7 @@ namespace bestAPPever
             {
                 using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
                 {
-                    string[] lp = new string[2];
-                    lp[0] = sr.ReadLine();
-                    lp[1] = sr.ReadLine();
-                    return lp;
+                    return new string[] { sr.ReadLine(), sr.ReadLine() };
                 }
             }
             catch (Exception ex)
@@ -149,7 +147,6 @@ namespace bestAPPever
             hungry = persStats[3];
             feeling = persStats[4];
             look = persStats[5];
-            int i = 0;
             List<int> parts = new List<int>();
             string temp = "";
             foreach (char ch in look)
@@ -179,6 +176,24 @@ namespace bestAPPever
             tamagochiEditor = new TamagochiEditor(parts[0], parts[1], parts[2]);
             this.Controls.Add(tamagochiEditor.createTamagoci());
         }
+        
+        private void ButtonMenu_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.Controls.Find("panelMenu", true).GetValue(0);
+                this.Controls.RemoveByKey("panelMenu");
+                this.Controls.RemoveByKey("groupBoxUsers");
+            }
+            catch(Exception ex)
+            {
+                Panel panelMenu = new CreateObjects().createMenu(Login, new System.Drawing.Point(460, 45));
+                this.Controls.Add(panelMenu);
+
+                Button buttonExit = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
+                buttonExit.Click += ButtonExit_Click;
+            }
+        }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
@@ -187,69 +202,39 @@ namespace bestAPPever
             this.Text = "Вход";
         }
 
-        Panel panelMenu = new Panel();
-        private void ButtonMenu_Click(object sender, EventArgs e)
-        {
-            if (panelMenu.Name != "panelMenu")
-            {
-                panelMenu = new CreateObjects().createMenu(Login, new System.Drawing.Point(460, 45));
-                this.Controls.Add(panelMenu);
-                Button buttonExit = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
-                buttonExit.Click += ButtonExit_Click;
-
-                Button buttonFindFriends = (Button)this.Controls.Find("buttonFindFriends", true).GetValue(0);
-                buttonFindFriends.Click += ButtonFindFriends_Click;
-                
-            }
-            else
-            {
-                this.Controls.Remove(panelMenu);
-                this.Controls.RemoveByKey("panelUsers");
-                panelMenu.Name = "null";
-            }
-        }
-
-        private void ButtonFindFriends_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void persCreation()
         {
             this.Controls.Clear();
             textBoxPersName = new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12));
             comboBoxSex = new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36));
-            this.Controls.Add(textBoxPersName);
-            this.Controls.Add(comboBoxSex);
             Button persCreationOk = new CreateObjects().createButton("persCreationOk", "Ok", new System.Drawing.Point(12, 400));
             persCreationOk.Click += PersCreationOk_Click;
+
+            this.Controls.Add(textBoxPersName);
+            this.Controls.Add(comboBoxSex);
             this.Controls.Add(persCreationOk);
 
-            PictureBox headArrowNext = new CreateObjects().createArrow("head", "arrowRight", new System.Drawing.Point(290, 140));
+            this.Controls.AddRange(new CreateObjects().createArrows().ToArray());
+
+            PictureBox headArrowNext = (PictureBox)this.Controls.Find("nextHead", true).GetValue(0);
             headArrowNext.Click += HeadArrowNext_Click;
-            this.Controls.Add(headArrowNext);
 
-            PictureBox bodyArrowNext = new CreateObjects().createArrow("body", "arrowRight", new System.Drawing.Point(290, 250));
+            PictureBox bodyArrowNext = (PictureBox)this.Controls.Find("nextBody", true).GetValue(0);
             bodyArrowNext.Click += BodyArrowNext_Click;
-            this.Controls.Add(bodyArrowNext);
 
-            PictureBox legsArrowNext = new CreateObjects().createArrow("legs", "arrowRight", new System.Drawing.Point(290, 340));
+            PictureBox legsArrowNext = (PictureBox)this.Controls.Find("nextLegs", true).GetValue(0);
             legsArrowNext.Click += LegsArrowNext_Click;
-            this.Controls.Add(legsArrowNext);
 
-            PictureBox headArrowPrev = new CreateObjects().createArrow("head", "arrowLeft", new System.Drawing.Point(100, 140));
+            PictureBox headArrowPrev = (PictureBox)this.Controls.Find("prevHead", true).GetValue(0);
             headArrowPrev.Click += HeadArrowPrev_Click;
-            this.Controls.Add(headArrowPrev);
 
-            PictureBox bodyArrowPrev = new CreateObjects().createArrow("body", "arrowLeft", new System.Drawing.Point(100, 250));
+            PictureBox bodyArrowPrev = (PictureBox)this.Controls.Find("prevBody", true).GetValue(0);
             bodyArrowPrev.Click += BodyArrowPrev_Click;
-            this.Controls.Add(bodyArrowPrev);
 
-            PictureBox legsArrowPrev = new CreateObjects().createArrow("legs", "arrowLeft", new System.Drawing.Point(100, 340));
+            PictureBox legsArrowPrev = (PictureBox)this.Controls.Find("prevLegs", true).GetValue(0);
             legsArrowPrev.Click += LegsArrowPrev_Click;
-            this.Controls.Add(legsArrowPrev);
 
-            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
+            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(610, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
             buttonMenu.Size = new Size(44, 22);
             this.Controls.Add(buttonMenu);
@@ -259,7 +244,6 @@ namespace bestAPPever
             this.Controls.Add(tamagochiEditor.createTamagoci());
             this.Text = "Создание персонажа";
         }
-        
 
         int[] persLook = new int[3];
         private void LegsArrowPrev_Click(object sender, EventArgs e)

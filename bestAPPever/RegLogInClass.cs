@@ -11,10 +11,10 @@ namespace bestAPPever
         MySqlConnection myConnection;
         string requestSQL;
         MySqlCommand myCommand;
-        public KeyValuePair<int, object>[] checkLogin(string login, string pass)
+        public KeyValuePair<int, object>[] tryToLogIn(string login, string pass)
         {
             KeyValuePair<int, object>[] mas = new KeyValuePair<int, object>[4];
-            if (checkTextBoxes(login, pass))
+            if (checkValidLoginPass(login, pass))
             {
                 string message = "";
                 int user_id = 0;
@@ -48,34 +48,34 @@ namespace bestAPPever
                         message = "Пользователя не существует\nлибо логин и пароль\nвведены не верно";
                     }
 
-                    mas[0] = new KeyValuePair<int, object>(0, user_id);
+                    mas[0] = new KeyValuePair<int, object>(0, message);
                     mas[1] = new KeyValuePair<int, object>(1, loginSuccess);
-                    mas[2] = new KeyValuePair<int, object>(2, persIs);
-                    mas[3] = new KeyValuePair<int, object>(3, message);
+                    mas[2] = new KeyValuePair<int, object>(2, user_id);
+                    mas[3] = new KeyValuePair<int, object>(3, persIs);
 
                     myDataReader.Close();
                     myConnection.Close();
                 }
                 catch (Exception ex)
                 {
-                    mas[0] = new KeyValuePair<int, object>(0, -1);
+                    mas[0] = new KeyValuePair<int, object>(0, ex.Message);
                     mas[1] = new KeyValuePair<int, object>(1, false);
-                    mas[2] = new KeyValuePair<int, object>(2, false);
-                    mas[3] = new KeyValuePair<int, object>(3, ex.Message);
+                    mas[2] = new KeyValuePair<int, object>(2, -1);
+                    mas[3] = new KeyValuePair<int, object>(3, false);
                 }
                 return mas;
             }
             else
             {
-                mas[0] = new KeyValuePair<int, object>(0, -1);
+                mas[0] = new KeyValuePair<int, object>(0, log);
                 mas[1] = new KeyValuePair<int, object>(1, false);
-                mas[2] = new KeyValuePair<int, object>(2, false);
-                mas[3] = new KeyValuePair<int, object>(3, log);
+                mas[2] = new KeyValuePair<int, object>(2, -1);
+                mas[3] = new KeyValuePair<int, object>(3, false);
                 return mas;
             }
         }
         
-        private bool checkLogin(string login)
+        private bool checkLoginExist(string login)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace bestAPPever
 
         //Проверка валидности логина/пароля
         string log = "";
-        private bool checkTextBoxes(string login, string password)
+        private bool checkValidLoginPass(string login, string password)
         {
             bool check = true;
             string symbols = "\"+,'{}[]()-*&?^:\\/%$;#№@!`~<>| ";
@@ -139,9 +139,9 @@ namespace bestAPPever
         public KeyValuePair<int, object>[] regisrUser(string login, string pass)
         {
             KeyValuePair<int, object>[] mas = new KeyValuePair<int, object>[3];
-            if (checkTextBoxes(login, pass))
+            if (checkValidLoginPass(login, pass))
             {
-                if (!checkLogin(login))
+                if (!checkLoginExist(login))
                 {
                     try
                     {
