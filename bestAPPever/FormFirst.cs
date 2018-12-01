@@ -48,6 +48,7 @@ namespace bestAPPever
             buttonReg.Click += ButtonReg_Click;
 
             textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
+            
             textBoxLogin.Focus();
             textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
 

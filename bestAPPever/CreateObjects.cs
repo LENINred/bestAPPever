@@ -148,10 +148,12 @@ namespace bestAPPever
             Label labelLogin = createLabel("UserLogin", login, new Point(80, 30));
             Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(50, 60));
             Button buttoтFindFriends = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
-            Button buttonExit = createButton("Exit", "Выход", new Point(50, 115));
+            Button buttonSettings = createButton("Settings", "Настройки", new Point(50, 110));
+            Button buttonExit = createButton("Exit", "Выход", new Point(50, 135));
             panel.Controls.Add(labelLogin);
             panel.Controls.Add(buttonListFriends);
             panel.Controls.Add(buttoтFindFriends);
+            panel.Controls.Add(buttonSettings);
             panel.Controls.Add(buttonExit);
 
             buttoтFindFriends.Click += ButtoтFindFriends_Click;
