@@ -57,6 +57,7 @@ namespace bestAPPever
             StatusStrip statusStrip = new StatusStrip();
             ToolStripLabel logLabel = new ToolStripLabel();
             logLabel.Text = text;
+            logLabel.Name = "logLabel";
             statusStrip.Name = "statusStrip";
             statusStrip.SizingGrip = false;
             statusStrip.ForeColor = Color.Red;

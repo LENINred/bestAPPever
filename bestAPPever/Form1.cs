@@ -20,9 +20,11 @@ namespace bestAPPever
         ComboBox comboBoxSex;
         int user_id;
         string Login = "";
+        StatusStrip statusStrip;
         private void FormFirst_Load(object sender, System.EventArgs e)
         {
-            //--            
+            statusStrip = new CreateObjects().createStatusStrip("Log", "");
+            this.Controls.Add(statusStrip);
         }
         
         private void buttonRegLog_Click(object sender, System.EventArgs e)
@@ -67,17 +69,15 @@ namespace bestAPPever
         
         private void ButtonReg_Click(object sender, System.EventArgs e)
         {
-            this.Text = "Регистрация";
-            RegLogInClass reglogInClass = new RegLogInClass();
-            KeyValuePair<int, object>[] userData = reglogInClass.regisrUser(textBoxLogin.Text, textBoxPassword.Text);
+            KeyValuePair<int, object>[] userData = new RegLogInClass().regisrUser(textBoxLogin.Text, textBoxPassword.Text);
             user_id = short.Parse(userData[2].Value.ToString());
-
-            this.Controls.RemoveByKey("statusStrip");
-            this.Controls.Add(new CreateObjects().createStatusStrip("Log", (String)userData[0].Value));
+            
+            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (String)userData[0].Value;
 
             if ((Boolean)userData[1].Value)
             {
                 //moveing to pers creation
+                this.Text = "Регистрация";
                 persCreation();
             }
         }
@@ -85,11 +85,11 @@ namespace bestAPPever
         TamagochiEditor tamagochiEditor;
         private void buttonLogIn_Click(object sender, System.EventArgs e)
         {
-            this.Controls.RemoveByKey("statusStrip");
             KeyValuePair<int, object>[] userData = new RegLogInClass().checkLogin(textBoxLogin.Text, textBoxPassword.Text);
             user_id = short.Parse(userData[0].Value.ToString());
+            
+            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (String)userData[3].Value;
 
-            this.Controls.Add(new CreateObjects().createStatusStrip("Log", (String)userData[3].Value));
             if ((Boolean)userData[1].Value)
             {
                 saveLogin(textBoxLogin.Text, textBoxPassword.Text);
@@ -216,7 +216,6 @@ namespace bestAPPever
 
         private void persCreation()
         {
-            this.Text = "Создание персонажа";
             this.Controls.Clear();
             textBoxPersName = new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12));
             comboBoxSex = new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36));
@@ -258,6 +257,7 @@ namespace bestAPPever
 
             tamagochiEditor = new TamagochiEditor(0, 0, 0);
             this.Controls.Add(tamagochiEditor.createTamagoci());
+            this.Text = "Создание персонажа";
         }
         
 
@@ -292,10 +292,9 @@ namespace bestAPPever
             persLook[2] = tamagochiEditor.nextLegs();
         }
 
-        // Проверка валидности создания персонажа
+        // Проверка валидности имени персонажа
         private void PersCreationOk_Click(object sender, EventArgs e)
         {
-            this.Controls.RemoveByKey("statusStrip");
             string log = "";
             if (textBoxPersName.Text.Length >= 4)
             {
@@ -320,7 +319,8 @@ namespace bestAPPever
             {
                 log += "Имя персонажа должно быть длиннее 4х символов";
             }
-            this.Controls.Add(new CreateObjects().createStatusStrip("Log", log));
+            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = log;
+            statusStrip.Refresh();
             this.Text = "Игра";
         }
 

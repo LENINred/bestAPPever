@@ -160,12 +160,14 @@ namespace bestAPPever
                     {
                         mas[0] = new KeyValuePair<int, object>(0, ex.Message);
                         mas[1] = new KeyValuePair<int, object>(1, false);
+                        mas[2] = new KeyValuePair<int, object>(1, 0);
                     }
                 }
                 else
                 {
                     mas[0] = new KeyValuePair<int, object>(0, "Пользователь уже существует");
                     mas[1] = new KeyValuePair<int, object>(1, false);
+                    mas[2] = new KeyValuePair<int, object>(1, 0);
                 }
                 return mas;
             }
