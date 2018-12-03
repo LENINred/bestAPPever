@@ -243,6 +243,7 @@ namespace bestAPPever
 
             tamagochiEditor = new TamagochiEditor(0, 0, 0);
             this.Controls.Add(tamagochiEditor.createTamagoci());
+            saveLogin(textBoxLogin.Text, textBoxPassword.Text);
             this.Text = "Создание персонажа";
         }
 
