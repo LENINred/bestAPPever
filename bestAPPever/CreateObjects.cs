@@ -136,8 +136,10 @@ namespace bestAPPever
         
         //Создание Меню
         Panel panel;
+        string Login;
         public Panel createMenu(string login, Point location)
         {
+            Login = login;
             panel = new Panel();
             panel.BorderStyle = BorderStyle.FixedSingle;
             panel.Name = "panelMenu";
@@ -190,15 +192,15 @@ namespace bestAPPever
             return groupUsers;
         }
 
-        private void createListUsers(List<string> listUsers)
+        private void createListUsers(List<KeyValuePair<int, string>> listUsers)
         {
             int y = 20;
-            foreach (string user in listUsers)
+            foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
                 Button buttonAdd = new Button();
 
-                nameUser.Text = user;
+                nameUser.Text = user.Value;
                 nameUser.AutoSize = true;
                 nameUser.Location = new Point(10, y + 5);
 
@@ -206,11 +208,18 @@ namespace bestAPPever
                 buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
                 buttonAdd.Text = "+";
                 buttonAdd.Location = new Point(75, y);
+                buttonAdd.Tag = user.Key;
+                buttonAdd.Click += ButtonAdd_Click;
 
                 groupBoxUsers.Controls.Add(nameUser);
                 groupBoxUsers.Controls.Add(buttonAdd);
                 y += 30;
             }
+        }
+
+        private void ButtonAdd_Click(object sender, EventArgs e)
+        {
+            new ListUsers().addFriend(Login, ((Button)sender).Tag.ToString());
         }
 
         private void Panel_LocationChanged(object sender, System.EventArgs e)

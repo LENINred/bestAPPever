@@ -48,13 +48,13 @@ namespace bestAPPever
                         message = "Пользователя не существует\nлибо логин и пароль\nвведены не верно";
                     }
 
+                    myDataReader.Close();
+                    myConnection.Close();
+
                     mas[0] = new KeyValuePair<int, object>(0, message);
                     mas[1] = new KeyValuePair<int, object>(1, loginSuccess);
                     mas[2] = new KeyValuePair<int, object>(2, user_id);
                     mas[3] = new KeyValuePair<int, object>(3, persIs);
-
-                    myDataReader.Close();
-                    myConnection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -151,10 +151,10 @@ namespace bestAPPever
                         myCommand = new MySqlCommand(requestSQL, myConnection);
                         myConnection.Open();
                         var user_id = myCommand.ExecuteScalar();
+                        myConnection.Close();
                         mas[0] = new KeyValuePair<int, object>(0, "Регистрация успешна");
                         mas[1] = new KeyValuePair<int, object>(1, true);
                         mas[2] = new KeyValuePair<int, object>(2, user_id);
-                        myConnection.Close();
                     }
                     catch (Exception ex)
                     {
