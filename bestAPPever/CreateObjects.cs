@@ -197,23 +197,26 @@ namespace bestAPPever
             int y = 20;
             foreach (KeyValuePair<int, string> user in listUsers)
             {
-                Label nameUser = new Label();
-                Button buttonAdd = new Button();
+                if (user.Value != Login)
+                {
+                    Label nameUser = new Label();
+                    Button buttonAdd = new Button();
 
-                nameUser.Text = user.Value;
-                nameUser.AutoSize = true;
-                nameUser.Location = new Point(10, y + 5);
+                    nameUser.Text = user.Value;
+                    nameUser.AutoSize = true;
+                    nameUser.Location = new Point(10, y + 5);
 
-                buttonAdd.Size = new Size(30, 25);
-                buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
-                buttonAdd.Text = "+";
-                buttonAdd.Location = new Point(75, y);
-                buttonAdd.Tag = user.Key;
-                buttonAdd.Click += ButtonAdd_Click;
+                    buttonAdd.Size = new Size(30, 25);
+                    buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
+                    buttonAdd.Text = "+";
+                    buttonAdd.Location = new Point(75, y);
+                    buttonAdd.Tag = user.Key;
+                    buttonAdd.Click += ButtonAdd_Click;
 
-                groupBoxUsers.Controls.Add(nameUser);
-                groupBoxUsers.Controls.Add(buttonAdd);
-                y += 30;
+                    groupBoxUsers.Controls.Add(nameUser);
+                    groupBoxUsers.Controls.Add(buttonAdd);
+                    y += 30;
+                }
             }
         }
 
