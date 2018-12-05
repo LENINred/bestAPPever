@@ -116,7 +116,7 @@ namespace bestAPPever
         {
             Label label = new Label();
             label.Location = point;
-            label.Name = "label"+name;
+            label.Name = "label" + name;
             label.AutoSize = true;
             label.Text = text;
             return label;
@@ -133,8 +133,8 @@ namespace bestAPPever
             comboBox.Items.Add("Мужской");
             return comboBox;
         }
-        
-        //Создание Меню
+
+        /////////////////////Создание Меню/////////////////////
         Panel panel;
         string Login;
         int User_id;
@@ -150,22 +150,23 @@ namespace bestAPPever
 
             Label labelLogin = createLabel("UserLogin", login, new Point(80, 30));
             Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(50, 60));
-            Button buttoтFindFriends = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
+            Button buttoтFindUsers = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
             Button buttonSettings = createButton("Settings", "Настройки", new Point(50, 110));
             Button buttonExit = createButton("Exit", "Выход", new Point(50, 135));
             panel.Controls.Add(labelLogin);
             panel.Controls.Add(buttonListFriends);
-            panel.Controls.Add(buttoтFindFriends);
+            panel.Controls.Add(buttoтFindUsers);
             panel.Controls.Add(buttonSettings);
             panel.Controls.Add(buttonExit);
 
-            buttoтFindFriends.Click += ButtoтFindFriends_Click;
+            buttoтFindUsers.Click += ButtoтFindUsers_Click;
             buttonListFriends.Click += ButtonListFriends_Click;
 
             return panel;
         }
-        
-        private void ButtoтFindFriends_Click(object sender, System.EventArgs e)
+
+        //////////Панель всех людей//////////
+        private void ButtoтFindUsers_Click(object sender, System.EventArgs e)
         {
             Form form = (Form)panel.GetContainerControl();
             try
@@ -176,11 +177,11 @@ namespace bestAPPever
             catch(Exception ex)
             {
                 form.Controls.RemoveByKey("tabControlFriends");
-                
                 form.Controls.Add(createGroupBoxUsers());
             }
         }
 
+        //Создание панели для списка пользователей
         public GroupBox createGroupBoxUsers()
         {
             GroupBox groupBoxUsers = new GroupBox();
@@ -193,49 +194,7 @@ namespace bestAPPever
             return groupBoxUsers;
         }
 
-        TabControl tabControlFriends = new TabControl();
-        private void ButtonListFriends_Click(object sender, EventArgs e)
-        {
-            Form form = (Form)panel.GetContainerControl();
-            try
-            {
-                form.Controls.Find("tabControlFriends", true).GetValue(0);
-                form.Controls.RemoveByKey("tabControlFriends");
-            }
-            catch (Exception ex)
-            {
-                form.Controls.RemoveByKey("groupBoxUsers");
-
-                form.Controls.Add(createTabControlFriends());
-            }
-        }
-
-        public TabControl createTabControlFriends()
-        {
-            TabControl tabControlFriends = new TabControl();
-            tabControlFriends.Name = "tabControlFriends";
-
-            TabPage tabFriends = new TabPage();
-            tabFriends.Text = "Друзья";
-            tabControlFriends.TabPages.Add(tabFriends);
-            createFriendsList(new ListUsers().getListFriends(Login), tabFriends);
-
-            List<KeyValuePair<int, string>> listNewFriends = new List<KeyValuePair<int, string>>();
-            listNewFriends = new ListUsers().getListNewFriends(Login);
-            if (listNewFriends.Count > 0)
-            {
-                TabPage tabNewFriends = new TabPage();
-                tabNewFriends.Text = "Заявки";
-                tabControlFriends.TabPages.Add(tabNewFriends);
-                createNewFriendsList(listNewFriends, tabNewFriends);
-            }
-
-            tabControlFriends.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
-            tabControlFriends.Location = new Point(panel.Location.X - tabControlFriends.Size.Width, 0);
-                     
-            return tabControlFriends;
-        }
-
+        //Формирование списка всех пользователей
         private void createUsersList(List<KeyValuePair<int, string>> listUsers, GroupBox groupBoxUsers)
         {
             int y = 20;
@@ -264,6 +223,60 @@ namespace bestAPPever
             }
         }
 
+        private void ButtonAdd_Click(object sender, EventArgs e)
+        {
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            new ListUsers().addFriend(User_id, Login, id, name, 1);
+        }
+        ////////////////////
+
+        //////////Панель друзей/заявок//////////
+        TabControl tabControlFriends = new TabControl();
+        private void ButtonListFriends_Click(object sender, EventArgs e)
+        {
+            Form form = (Form)panel.GetContainerControl();
+            try
+            {
+                form.Controls.Find("tabControlFriends", true).GetValue(0);
+                form.Controls.RemoveByKey("tabControlFriends");
+            }
+            catch (Exception ex)
+            {
+                form.Controls.RemoveByKey("groupBoxUsers");
+
+                form.Controls.Add(createTabControlFriends());
+            }
+        }
+
+        //Формирование вкладок друзей/заявок
+        public TabControl createTabControlFriends()
+        {
+            TabControl tabControlFriends = new TabControl();
+            tabControlFriends.Name = "tabControlFriends";
+
+            TabPage tabFriends = new TabPage();
+            tabFriends.Text = "Друзья";
+            tabControlFriends.TabPages.Add(tabFriends);
+            createFriendsList(new ListUsers().getListFriends(Login), tabFriends);
+
+            List<KeyValuePair<int, string>> listNewFriends = new List<KeyValuePair<int, string>>();
+            listNewFriends = new ListUsers().getListNewFriends(Login);
+            if (listNewFriends.Count > 0)
+            {
+                TabPage tabNewFriends = new TabPage();
+                tabNewFriends.Text = "Заявки";
+                tabControlFriends.TabPages.Add(tabNewFriends);
+                createNewFriendsList(listNewFriends, tabNewFriends);
+            }
+
+            tabControlFriends.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
+            tabControlFriends.Location = new Point(panel.Location.X - tabControlFriends.Size.Width, 0);
+                     
+            return tabControlFriends;
+        }
+
+        //Формирование списка друзей
         private void createFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
         {
             int y = 20;
@@ -289,6 +302,7 @@ namespace bestAPPever
             }
         }
 
+        //Формирование списка заявок
         private void createNewFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
         {
             int y = 20;
@@ -347,12 +361,6 @@ namespace bestAPPever
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
             new ListUsers().removeFriend(Login, id);
         }
-
-        private void ButtonAdd_Click(object sender, EventArgs e)
-        {
-            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
-            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
-            new ListUsers().addFriend(User_id, Login, id, name, 1);
-        }
+        ////////////////////
     }
 }
