@@ -55,7 +55,7 @@ namespace bestAPPever
         }
 
         //Удаление друга
-        public void removeFriend(string name, string friend_id)
+        public void removeFriend(string name, int friend_id)
         {
             try
             {
@@ -78,18 +78,48 @@ namespace bestAPPever
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
-                string requestSQL = "SELECT `friend_id`, `friend_name`, `status` FROM friends WHERE user_name = '" + name + "'";
+                string requestSQL = "SELECT `user_id`, `user_name`, `friend_id`, `friend_name`, `status` FROM friends WHERE ((user_name = '" + name + "') OR (friend_name = '" + name + "'))  AND (status = 2)";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 MySqlDataReader myDataReader = myCommand.ExecuteReader();
                 List<KeyValuePair<int, string>> friendsList = new List<KeyValuePair<int, string>>();
+                
                 while (myDataReader.Read())
                 {
-                    if (myDataReader.GetInt16(2) == 2) {
+                    if (myDataReader.GetString(1) == name)
+                    {
+                        friendsList.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(2), myDataReader.GetString(3)));
+                    }
+                    if (myDataReader.GetString(3) == name)
+                    {
                         friendsList.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
-                    }                    
+                    }
                 }
                 return friendsList;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        //Получаем список запросов в друзья <ИД, имя>
+        public List<KeyValuePair<int, string>> getListNewFriends(string name)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                string requestSQL = "SELECT `user_id`, `user_name`, `status` FROM `friends` WHERE (`friend_name` = '" + name + "') AND (`status` = 1)";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                MySqlDataReader myDataReader = myCommand.ExecuteReader();
+                List<KeyValuePair<int, string>> newFriendsList = new List<KeyValuePair<int, string>>();
+
+                while (myDataReader.Read())
+                {
+                    newFriendsList.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
+                }
+                return newFriendsList;
             }
             catch (Exception ex)
             {

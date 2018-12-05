@@ -147,7 +147,6 @@ namespace bestAPPever
             panel.Name = "panelMenu";
             panel.Dock = DockStyle.Right;
             panel.Location = location;
-            panel.LocationChanged += Panel_LocationChanged;
 
             Label labelLogin = createLabel("UserLogin", login, new Point(80, 30));
             Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(50, 60));
@@ -161,11 +160,11 @@ namespace bestAPPever
             panel.Controls.Add(buttonExit);
 
             buttoтFindFriends.Click += ButtoтFindFriends_Click;
+            buttonListFriends.Click += ButtonListFriends_Click;
 
             return panel;
         }
-
-        GroupBox groupBoxUsers = new GroupBox();
+        
         private void ButtoтFindFriends_Click(object sender, System.EventArgs e)
         {
             Form form = (Form)panel.GetContainerControl();
@@ -176,25 +175,68 @@ namespace bestAPPever
             }
             catch(Exception ex)
             {
-                groupBoxUsers = createUsersGroupBox();
-                form.Controls.Add(groupBoxUsers);
-                createListUsers(new ListUsers().getListUsers());
+                form.Controls.RemoveByKey("tabControlFriends");
+                
+                form.Controls.Add(createGroupBoxUsers());
             }
         }
 
-        public GroupBox createUsersGroupBox()
+        public GroupBox createGroupBoxUsers()
         {
-            GroupBox groupUsers = new GroupBox();
-            groupUsers.Name = "groupBoxUsers";
-            groupUsers.Text = "Поиск людей";
-            groupUsers.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
-            groupUsers.Location = new Point(panel.Location.X - groupUsers.Size.Width, 0);
-                        
+            GroupBox groupBoxUsers = new GroupBox();
+            groupBoxUsers.Name = "groupBoxUsers";
+            groupBoxUsers.Text = "Поиск людей";
+            groupBoxUsers.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
+            groupBoxUsers.Location = new Point(panel.Location.X - groupBoxUsers.Size.Width, 0);
+            createUsersList(new ListUsers().getListUsers(), groupBoxUsers);
 
-            return groupUsers;
+            return groupBoxUsers;
         }
 
-        private void createListUsers(List<KeyValuePair<int, string>> listUsers)
+        TabControl tabControlFriends = new TabControl();
+        private void ButtonListFriends_Click(object sender, EventArgs e)
+        {
+            Form form = (Form)panel.GetContainerControl();
+            try
+            {
+                form.Controls.Find("tabControlFriends", true).GetValue(0);
+                form.Controls.RemoveByKey("tabControlFriends");
+            }
+            catch (Exception ex)
+            {
+                form.Controls.RemoveByKey("groupBoxUsers");
+
+                form.Controls.Add(createTabControlFriends());
+            }
+        }
+
+        public TabControl createTabControlFriends()
+        {
+            TabControl tabControlFriends = new TabControl();
+            tabControlFriends.Name = "tabControlFriends";
+
+            TabPage tabFriends = new TabPage();
+            tabFriends.Text = "Друзья";
+            tabControlFriends.TabPages.Add(tabFriends);
+            createFriendsList(new ListUsers().getListFriends(Login), tabFriends);
+
+            List<KeyValuePair<int, string>> listNewFriends = new List<KeyValuePair<int, string>>();
+            listNewFriends = new ListUsers().getListNewFriends(Login);
+            if (listNewFriends.Count > 0)
+            {
+                TabPage tabNewFriends = new TabPage();
+                tabNewFriends.Text = "Заявки";
+                tabControlFriends.TabPages.Add(tabNewFriends);
+                createNewFriendsList(listNewFriends, tabNewFriends);
+            }
+
+            tabControlFriends.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
+            tabControlFriends.Location = new Point(panel.Location.X - tabControlFriends.Size.Width, 0);
+                     
+            return tabControlFriends;
+        }
+
+        private void createUsersList(List<KeyValuePair<int, string>> listUsers, GroupBox groupBoxUsers)
         {
             int y = 20;
             foreach (KeyValuePair<int, string> user in listUsers)
@@ -222,16 +264,73 @@ namespace bestAPPever
             }
         }
 
+        private void createFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
+        {
+            int y = 20;
+            foreach (KeyValuePair<int, string> user in listUsers)
+            {
+                Label nameUser = new Label();
+                Button buttonRemove = new Button();
+
+                nameUser.Text = user.Value;
+                nameUser.AutoSize = true;
+                nameUser.Location = new Point(10, y + 5);
+
+                buttonRemove.Size = new Size(30, 25);
+                buttonRemove.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonRemove.Text = "x";
+                buttonRemove.Location = new Point(75, y);
+                buttonRemove.Tag = user.Key + ";" + user.Value;
+                buttonRemove.Click += ButtonRemove_Click;
+
+                tabFriends.Controls.Add(nameUser);
+                tabFriends.Controls.Add(buttonRemove);
+                y += 30;
+            }
+        }
+
+        private void createNewFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
+        {
+            int y = 20;
+            foreach (KeyValuePair<int, string> user in listUsers)
+            {
+                Label nameUser = new Label();
+                Button buttonConfirm = new Button();
+
+                nameUser.Text = user.Value;
+                nameUser.AutoSize = true;
+                nameUser.Location = new Point(10, y + 5);
+
+                buttonConfirm.Size = new Size(30, 25);
+                buttonConfirm.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonConfirm.Text = "+";
+                buttonConfirm.Location = new Point(75, y);
+                buttonConfirm.Tag = user.Key + ";" + user.Value;
+                buttonConfirm.Click += ButtonConfirm_Click;
+
+                tabFriends.Controls.Add(nameUser);
+                tabFriends.Controls.Add(buttonConfirm);
+                y += 30;
+            }
+        }
+
+        private void ButtonConfirm_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ButtonRemove_Click(object sender, EventArgs e)
+        {
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            new ListUsers().removeFriend(Login, id);
+        }
+
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
             new ListUsers().addFriend(User_id, Login, id, name, 1);
-        }
-
-        private void Panel_LocationChanged(object sender, System.EventArgs e)
-        {
-            groupBoxUsers.Location = new Point(panel.Location.X - groupBoxUsers.Size.Width, 0);
         }
     }
 }
