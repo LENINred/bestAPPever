@@ -137,8 +137,10 @@ namespace bestAPPever
         //Создание Меню
         Panel panel;
         string Login;
-        public Panel createMenu(string login, Point location)
+        int User_id;
+        public Panel createMenu(string login, int user_id, Point location)
         {
+            User_id = user_id;
             Login = login;
             panel = new Panel();
             panel.BorderStyle = BorderStyle.FixedSingle;
@@ -210,7 +212,7 @@ namespace bestAPPever
                     buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
                     buttonAdd.Text = "+";
                     buttonAdd.Location = new Point(75, y);
-                    buttonAdd.Tag = user.Key;
+                    buttonAdd.Tag = user.Key + ";" + user.Value;
                     buttonAdd.Click += ButtonAdd_Click;
 
                     groupBoxUsers.Controls.Add(nameUser);
@@ -222,7 +224,9 @@ namespace bestAPPever
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            new ListUsers().addFriend(Login, ((Button)sender).Tag.ToString());
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            new ListUsers().addFriend(User_id, Login, id, name, 1);
         }
 
         private void Panel_LocationChanged(object sender, System.EventArgs e)

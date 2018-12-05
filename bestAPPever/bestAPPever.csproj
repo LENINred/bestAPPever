@@ -55,6 +55,7 @@
       <DependentUpon>FormFirst.cs</DependentUpon>
     </Compile>
     <Compile Include="ListUsers.cs" />
+    <Compile Include="MySqlListener.cs" />
     <Compile Include="RegLogInClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

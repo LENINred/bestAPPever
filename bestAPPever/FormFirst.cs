@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -161,7 +163,6 @@ namespace bestAPPever
                     parts.Add(short.Parse(temp));
                     temp = "";
                 }
-                
             }
             Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
@@ -176,8 +177,30 @@ namespace bestAPPever
             this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Настроение: " + feeling, new System.Drawing.Point(10, 190)));
             tamagochiEditor = new TamagochiEditor(parts[0], parts[1], parts[2]);
             this.Controls.Add(tamagochiEditor.createTamagoci());
+            listenToNotifys();
         }
-        
+
+        private void listenToNotifys()
+        {
+            MySqlListener myNewSqlListener = new MySqlListener();
+            myNewSqlListener.MyEvent += MyNewSqlListener_MyEvent;
+            myNewSqlListener.Method(user_id);
+        }
+
+        List<string> users_request = new List<string>();
+        private void MyNewSqlListener_MyEvent(object sender, MyEventArgs e)
+        {
+            if(e.UserStatus.Key == 2)
+            {
+                MessageBox.Show("Теперь вы друзья с пользователем " + e.UserStatus.Value);
+            }
+            if(e.UserStatus.Key == 1)
+            {
+                users_request.Add(e.UserStatus.Value);
+                MessageBox.Show(e.UserStatus.Value + " прислал вам заявку в друзья");
+            }
+        }
+
         private void ButtonMenu_Click(object sender, EventArgs e)
         {
             try
@@ -188,7 +211,7 @@ namespace bestAPPever
             }
             catch(Exception ex)
             {
-                Panel panelMenu = new CreateObjects().createMenu(Login, new System.Drawing.Point(460, 45));
+                Panel panelMenu = new CreateObjects().createMenu(Login, user_id, new System.Drawing.Point(460, 45));
                 this.Controls.Add(panelMenu);
 
                 Button buttonExit = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
@@ -309,6 +332,5 @@ namespace bestAPPever
             statusStrip.Refresh();
             this.Text = "Игра";
         }
-
     }
 }
