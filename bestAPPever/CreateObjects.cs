@@ -296,6 +296,7 @@ namespace bestAPPever
             {
                 Label nameUser = new Label();
                 Button buttonConfirm = new Button();
+                Button buttonReject = new Button();
 
                 nameUser.Text = user.Value;
                 nameUser.AutoSize = true;
@@ -304,19 +305,40 @@ namespace bestAPPever
                 buttonConfirm.Size = new Size(30, 25);
                 buttonConfirm.Font = new Font("Arial", 10, FontStyle.Bold);
                 buttonConfirm.Text = "+";
-                buttonConfirm.Location = new Point(75, y);
+                buttonConfirm.Location = new Point(65, y);
                 buttonConfirm.Tag = user.Key + ";" + user.Value;
                 buttonConfirm.Click += ButtonConfirm_Click;
 
+                buttonReject.Size = new Size(30, 25);
+                buttonReject.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonReject.Text = "x";
+                buttonReject.Location = new Point(105, y);
+                buttonReject.Tag = user.Key + ";" + user.Value;
+                buttonReject.Click += ButtonReject_Click;
+
                 tabFriends.Controls.Add(nameUser);
                 tabFriends.Controls.Add(buttonConfirm);
+                tabFriends.Controls.Add(buttonReject);
                 y += 30;
             }
         }
 
+        private void ButtonReject_Click(object sender, EventArgs e)
+        {
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            new ListUsers().rejectFriend(User_id, Login, id, name);
+            ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
+            ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
+        }
+
         private void ButtonConfirm_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            new ListUsers().confirmFriend(User_id, Login, id, name);
+            ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
+            ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }
 
         private void ButtonRemove_Click(object sender, EventArgs e)

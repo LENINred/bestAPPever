@@ -52,7 +52,7 @@ namespace bestAPPever
             {
                 //--
             }
-        }
+        }        
 
         //Удаление друга
         public void removeFriend(string name, int friend_id)
@@ -124,6 +124,48 @@ namespace bestAPPever
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        //Одобрить заявку в друзья
+        public void confirmFriend(int user_id, string user_name, int friend_id, string friend_name)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                string requestSQL = "UPDATE `friends` SET `status` = 2, `date_add`= CURRENT_DATE() WHERE ((`user_id` = " + friend_id +
+                    ") AND (`user_name` = '" + friend_name +
+                    "') AND (`friend_id` = " + user_id +
+                    ") AND (`friend_name` = '" + user_name + "'))";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                myCommand.ExecuteScalar();
+                myConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                //--
+            }
+        }
+
+        //Одобрить заявку в друзья
+        public void rejectFriend(int user_id, string user_name, int friend_id, string friend_name)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                string requestSQL = "DELETE FROM `friends` WHERE ((`user_id` = " + friend_id +
+                    ") AND (`user_name` = '" + friend_name +
+                    "') AND (`friend_id` = " + user_id +
+                    ") AND (`friend_name` = '" + user_name + "')  AND (`status` = 1))";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                myCommand.ExecuteScalar();
+                myConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                //--
             }
         }
     }
