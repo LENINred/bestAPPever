@@ -1,10 +1,7 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -24,13 +21,13 @@ namespace bestAPPever
         int user_id;
         string Login = "";
         StatusStrip statusStrip;
-        private void FormFirst_Load(object sender, System.EventArgs e)
+        private void FormFirst_Load(object sender, EventArgs e)
         {
             statusStrip = new CreateObjects().createStatusStrip("Log", "");
             this.Controls.Add(statusStrip);
         }
         
-        private void buttonRegLog_Click(object sender, System.EventArgs e)
+        private void buttonRegLog_Click(object sender, EventArgs e)
         {
             showFormRegLog();            
         }
@@ -39,10 +36,10 @@ namespace bestAPPever
         {
             buttonRegLog.Visible = false;
 
-            this.Controls.Add(new CreateObjects().createTextBox("Login", new System.Drawing.Point(290, 190)));
-            this.Controls.Add(new CreateObjects().createTextBox("Pass", new System.Drawing.Point(290, 215), true));
-            this.Controls.Add(new CreateObjects().createButton("LogIn", "Войти", new System.Drawing.Point(290, 245)));
-            this.Controls.Add(new CreateObjects().createButton("Registration", "Регистрация", new System.Drawing.Point(290, 269)));
+            this.Controls.Add(new CreateObjects().createTextBox("Login", new Point(290, 190)));
+            this.Controls.Add(new CreateObjects().createTextBox("Pass", new Point(290, 215), true));
+            this.Controls.Add(new CreateObjects().createButton("LogIn", "Войти", new Point(290, 245)));
+            this.Controls.Add(new CreateObjects().createButton("Registration", "Регистрация", new Point(290, 269)));
 
             buttonLogIn = (Button)this.Controls.Find("buttonLogIn", true).GetValue(0);
             buttonLogIn.Click += buttonLogIn_Click;
@@ -50,10 +47,10 @@ namespace bestAPPever
             Button buttonReg = (Button)this.Controls.Find("buttonRegistration", true).GetValue(0);
             buttonReg.Click += ButtonReg_Click;
 
-            textBoxLogin = ((TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0));
+            textBoxLogin = (TextBox)this.Controls.Find("textBoxLogin", true).GetValue(0);
             
             textBoxLogin.Focus();
-            textBoxPassword = ((TextBox)this.Controls.Find("textBoxPass", true).GetValue(0));
+            textBoxPassword = (TextBox)this.Controls.Find("textBoxPass", true).GetValue(0);
 
             textBoxLogin.KeyPress += TextBoxPassword_KeyPress;
             textBoxPassword.KeyPress += TextBoxPassword_KeyPress;
@@ -71,14 +68,14 @@ namespace bestAPPever
             if (e.KeyChar == '\r') buttonLogIn.PerformClick();
         }
         
-        private void ButtonReg_Click(object sender, System.EventArgs e)
+        private void ButtonReg_Click(object sender, EventArgs e)
         {
             KeyValuePair<int, object>[] userData = new RegLogInClass().regisrUser(textBoxLogin.Text, textBoxPassword.Text);
             user_id = short.Parse(userData[2].Value.ToString());
             
-            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (String)userData[0].Value;
+            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (string)userData[0].Value;
 
-            if ((Boolean)userData[1].Value)
+            if ((bool)userData[1].Value)
             {
                 //moveing to pers creation
                 this.Text = "Создание персонажа";
@@ -87,17 +84,17 @@ namespace bestAPPever
         }
 
         TamagochiEditor tamagochiEditor;
-        private void buttonLogIn_Click(object sender, System.EventArgs e)
+        private void buttonLogIn_Click(object sender, EventArgs e)
         {
             KeyValuePair<int, object>[] userData = new RegLogInClass().tryToLogIn(textBoxLogin.Text, textBoxPassword.Text);
             user_id = short.Parse(userData[2].Value.ToString());
             
-            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (String)userData[0].Value;
+            ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (string)userData[0].Value;
 
-            if ((Boolean)userData[1].Value)
+            if ((bool)userData[1].Value)
             {
                 saveLogin(textBoxLogin.Text, textBoxPassword.Text);
-                if (!(Boolean)userData[3].Value)
+                if (!(bool)userData[3].Value)
                 {
                     //moveing to pers creation
                     this.Text = "Создание персонажа";
@@ -134,7 +131,7 @@ namespace bestAPPever
                     return new string[] { sr.ReadLine(), sr.ReadLine() };
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -147,7 +144,7 @@ namespace bestAPPever
             string[] persStats = new TamagochiStatus().getPersStatus(user_id);
             string name = "", sex = "", health = "", hungry = "", feeling = "", look = "";
             name = persStats[0];
-            sex = (persStats[1] == "1") ? ("Мужской") : ("Женский");
+            sex = (persStats[1] == "1") ? "Мужской" : "Женский";
             health = persStats[2];
             hungry = persStats[3];
             feeling = persStats[4];
@@ -166,17 +163,17 @@ namespace bestAPPever
                     temp = "";
                 }
             }
-            buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
+            buttonMenu = new CreateObjects().createButton("Menu", "Меню", new Point(620, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
             buttonMenu.Size = new Size(44, 22);
             this.Controls.Add(buttonMenu);
             buttonMenu.Click += ButtonMenu_Click;
 
-            this.Controls.Add(new CreateObjects().createLabel("PersName", "Имя: " + name, new System.Drawing.Point(10, 70)));
-            this.Controls.Add(new CreateObjects().createLabel("PersSex", "Пол: " + sex, new System.Drawing.Point(10, 100)));
-            this.Controls.Add(new CreateObjects().createLabel("PersHealth", "Здоровье: " + health, new System.Drawing.Point(10, 130)));
-            this.Controls.Add(new CreateObjects().createLabel("PersHungry", "Голод: " + hungry, new System.Drawing.Point(10, 160)));
-            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Настроение: " + feeling, new System.Drawing.Point(10, 190)));
+            this.Controls.Add(new CreateObjects().createLabel("PersName", "Имя: " + name, new Point(10, 70)));
+            this.Controls.Add(new CreateObjects().createLabel("PersSex", "Пол: " + sex, new Point(10, 100)));
+            this.Controls.Add(new CreateObjects().createLabel("PersHealth", "Здоровье: " + health, new Point(10, 130)));
+            this.Controls.Add(new CreateObjects().createLabel("PersHungry", "Голод: " + hungry, new Point(10, 160)));
+            this.Controls.Add(new CreateObjects().createLabel("PersFeeling", "Настроение: " + feeling, new Point(10, 190)));
             tamagochiEditor = new TamagochiEditor(parts[0], parts[1], parts[2]);
             this.Controls.Add(tamagochiEditor.createTamagoci());
             listenToNotifys();
@@ -186,7 +183,7 @@ namespace bestAPPever
         {
             MySqlListener myNewSqlListener = new MySqlListener();
             myNewSqlListener.MyEvent += MyNewSqlListener_MyEvent;
-            myNewSqlListener.Method(user_id);
+            myNewSqlListener.Method(user_id, Login);
         }
 
         List<string> users_request = new List<string>();
@@ -217,7 +214,7 @@ namespace bestAPPever
                 GroupBox groupBox = new CreateObjects().createNotification(notif, this.Controls);
                 this.Controls.Add(groupBox);
 
-                System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+                Timer timer = new Timer();
                 timer.Tick += (sender, e) => MyTimer_Tick(sender, e, groupBox.Name);
                 timer.Interval = 5000;
                 timer.Start();
@@ -227,7 +224,7 @@ namespace bestAPPever
         private void MyTimer_Tick(object sender, EventArgs e, string notif)
         {
             this.Controls.RemoveByKey(notif);
-            ((System.Windows.Forms.Timer)sender).Stop();
+            ((Timer)sender).Stop();
         }
 
         private void ButtonMenu_Click(object sender, EventArgs e)
@@ -239,9 +236,9 @@ namespace bestAPPever
                 this.Controls.RemoveByKey("groupBoxUsers");
                 this.Controls.RemoveByKey("tabControlFriends");
             }
-            catch(Exception ex)
+            catch
             {
-                Panel panelMenu = new CreateObjects().createMenu(Login, user_id, new System.Drawing.Point(460, 45));
+                Panel panelMenu = new CreateObjects().createMenu(Login, user_id, new Point(460, 45));
                 this.Controls.Add(panelMenu);
 
                 Button buttonExit = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
@@ -259,9 +256,9 @@ namespace bestAPPever
         private void persCreation()
         {
             this.Controls.Clear();
-            textBoxPersName = new CreateObjects().createTextBox("PersName", new System.Drawing.Point(12, 12));
-            comboBoxSex = new CreateObjects().createComboBox("Sex", new System.Drawing.Point(12, 36));
-            Button persCreationOk = new CreateObjects().createButton("persCreationOk", "Ok", new System.Drawing.Point(12, 400));
+            textBoxPersName = new CreateObjects().createTextBox("PersName", new Point(12, 12));
+            comboBoxSex = new CreateObjects().createComboBox("Sex", new Point(12, 36));
+            Button persCreationOk = new CreateObjects().createButton("persCreationOk", "Ok", new Point(12, 400));
             persCreationOk.Click += PersCreationOk_Click;
 
             this.Controls.Add(textBoxPersName);
@@ -288,7 +285,7 @@ namespace bestAPPever
             PictureBox legsArrowPrev = (PictureBox)this.Controls.Find("prevLegs", true).GetValue(0);
             legsArrowPrev.Click += LegsArrowPrev_Click;
 
-            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(610, 10));
+            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new Point(610, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
             buttonMenu.Size = new Size(44, 22);
             this.Controls.Add(buttonMenu);
