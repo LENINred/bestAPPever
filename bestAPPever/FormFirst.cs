@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -138,14 +139,15 @@ namespace bestAPPever
                 return null;
             }
         }
-        
+
+        Button buttonMenu;
         private void startGame()
         {
             this.Controls.Clear();
             string[] persStats = new TamagochiStatus().getPersStatus(user_id);
             string name = "", sex = "", health = "", hungry = "", feeling = "", look = "";
             name = persStats[0];
-            sex = persStats[1];
+            sex = (persStats[1] == "1") ? ("Мужской") : ("Женский");
             health = persStats[2];
             hungry = persStats[3];
             feeling = persStats[4];
@@ -164,7 +166,7 @@ namespace bestAPPever
                     temp = "";
                 }
             }
-            Button buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
+            buttonMenu = new CreateObjects().createButton("Menu", "Меню", new System.Drawing.Point(620, 10));
             buttonMenu.Anchor = AnchorStyles.Right;
             buttonMenu.Size = new Size(44, 22);
             this.Controls.Add(buttonMenu);
@@ -188,17 +190,44 @@ namespace bestAPPever
         }
 
         List<string> users_request = new List<string>();
+        string notif = "";
         private void MyNewSqlListener_MyEvent(object sender, MyEventArgs e)
         {
-            if(e.UserStatus.Key == 2)
+            if (e.UserStatus.Key == 2)
             {
-                MessageBox.Show("Теперь вы друзья с пользователем " + e.UserStatus.Value);
+                notif = "Теперь вы друзья с пользователем " + e.UserStatus.Value;
+                showNotification();
             }
             if(e.UserStatus.Key == 1)
             {
                 users_request.Add(e.UserStatus.Value);
-                MessageBox.Show(e.UserStatus.Value + " прислал вам заявку в друзья");
+                notif = e.UserStatus.Value + " прислал вам заявку в друзья";
+                showNotification();
             }
+        }
+
+        private void showNotification()
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new MethodInvoker(showNotification));
+            }
+            else
+            {
+                GroupBox groupBox = new CreateObjects().createNotification(notif, this.Controls);
+                this.Controls.Add(groupBox);
+
+                System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+                timer.Tick += (sender, e) => MyTimer_Tick(sender, e, groupBox.Name);
+                timer.Interval = 5000;
+                timer.Start();
+            }
+        }
+
+        private void MyTimer_Tick(object sender, EventArgs e, string notif)
+        {
+            this.Controls.RemoveByKey(notif);
+            ((System.Windows.Forms.Timer)sender).Stop();
         }
 
         private void ButtonMenu_Click(object sender, EventArgs e)
@@ -208,6 +237,7 @@ namespace bestAPPever
                 this.Controls.Find("panelMenu", true).GetValue(0);
                 this.Controls.RemoveByKey("panelMenu");
                 this.Controls.RemoveByKey("groupBoxUsers");
+                this.Controls.RemoveByKey("tabControlFriends");
             }
             catch(Exception ex)
             {

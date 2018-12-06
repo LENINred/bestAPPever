@@ -10,7 +10,7 @@ namespace bestAPPever
     {
         public event EventHandler<MyEventArgs> MyEvent;
         private int User_id;
-        private List<string> users_request = new List<string>();
+        List<string> users_request = new List<string>();
 
         public void Method(int user_id)
         {

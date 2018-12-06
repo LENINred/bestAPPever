@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -134,6 +135,48 @@ namespace bestAPPever
             return comboBox;
         }
 
+        ////////Оповещение////////
+        public GroupBox createNotification(string text, Control.ControlCollection collection)
+        {
+            int y = 385;
+            string name = "groupBoxNotification";
+            GroupBox groupBoxNotification = new GroupBox();
+            groupBoxNotification.Text = "Оповещение";
+            groupBoxNotification.Size = new Size(297, 63);
+
+            Label labelNotification = new Label();
+            labelNotification.Text = text;
+            labelNotification.AutoSize = true;
+            labelNotification.Location = new Point(20, 20);
+            groupBoxNotification.Controls.Add(labelNotification);
+
+            int t = 0;
+            foreach(Control c in collection)
+            {
+                if (c.Name.Contains("groupBoxNotification"))
+                {
+                    t++;
+                    y -= 75;
+                }
+            }
+            if (t <= 2)
+            {
+                groupBoxNotification.Name = name + t;
+                groupBoxNotification.Location = new Point(355, y);
+            }
+            else
+            {
+                t = 0;
+                y = 385;
+                groupBoxNotification.Name = name + 0;
+                groupBoxNotification.Location = new Point(355, 385);
+            }
+            return groupBoxNotification;
+        }
+
+
+        ////////////////
+
         /////////////////////Создание Меню/////////////////////
         Panel panel;
         string Login;
@@ -150,16 +193,16 @@ namespace bestAPPever
 
             Label labelLogin = createLabel("UserLogin", login, new Point(80, 30));
             Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(50, 60));
-            Button buttoтFindUsers = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
+            Button buttonFindUsers = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
             Button buttonSettings = createButton("Settings", "Настройки", new Point(50, 110));
             Button buttonExit = createButton("Exit", "Выход", new Point(50, 135));
             panel.Controls.Add(labelLogin);
             panel.Controls.Add(buttonListFriends);
-            panel.Controls.Add(buttoтFindUsers);
+            panel.Controls.Add(buttonFindUsers);
             panel.Controls.Add(buttonSettings);
             panel.Controls.Add(buttonExit);
 
-            buttoтFindUsers.Click += ButtoтFindUsers_Click;
+            buttonFindUsers.Click += ButtoтFindUsers_Click;
             buttonListFriends.Click += ButtonListFriends_Click;
 
             return panel;
