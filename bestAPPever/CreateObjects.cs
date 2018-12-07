@@ -307,9 +307,19 @@ namespace bestAPPever
             if (listNewFriends.Count > 0)
             {
                 TabPage tabNewFriends = new TabPage();
-                tabNewFriends.Text = "Заявки";
+                tabNewFriends.Text = "Входящие заявки";
                 tabControlFriends.TabPages.Add(tabNewFriends);
                 createNewFriendsList(listNewFriends, tabNewFriends);
+            }
+
+            List<KeyValuePair<int, string>> listNewFriendsOut = new List<KeyValuePair<int, string>>();
+            listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
+            if (listNewFriendsOut.Count > 0)
+            {
+                TabPage tabNewFriendsOut = new TabPage();
+                tabNewFriendsOut.Text = "Исходящие заявки";
+                tabControlFriends.TabPages.Add(tabNewFriendsOut);
+                createNewFriendsListOut(listNewFriendsOut, tabNewFriendsOut);
             }
 
             tabControlFriends.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
@@ -344,7 +354,7 @@ namespace bestAPPever
             }
         }
 
-        //Формирование списка заявок
+        //Формирование списка входящих заявок
         private void createNewFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
         {
             int y = 20;
@@ -377,6 +387,41 @@ namespace bestAPPever
                 tabFriends.Controls.Add(buttonReject);
                 y += 30;
             }
+        }
+
+        //Формирование списка исходящих заявок
+        private void createNewFriendsListOut(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
+        {
+            int y = 20;
+            foreach (KeyValuePair<int, string> user in listUsers)
+            {
+                Label nameUser = new Label();
+                Button buttonRejectOut = new Button();
+
+                nameUser.Text = user.Value;
+                nameUser.AutoSize = true;
+                nameUser.Location = new Point(10, y + 5);
+
+                buttonRejectOut.Size = new Size(30, 25);
+                buttonRejectOut.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonRejectOut.Text = "x";
+                buttonRejectOut.Location = new Point(105, y);
+                buttonRejectOut.Tag = user.Key + ";" + user.Value;
+                buttonRejectOut.Click += ButtonRejectOut_Click;
+
+                tabFriends.Controls.Add(nameUser);
+                tabFriends.Controls.Add(buttonRejectOut);
+                y += 30;
+            }
+        }
+
+        private void ButtonRejectOut_Click(object sender, EventArgs e)
+        {
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            new ListUsers().rejectFriendOut(id, name, User_id, Login);
+            ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
+            ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }
 
         private void ButtonReject_Click(object sender, EventArgs e)

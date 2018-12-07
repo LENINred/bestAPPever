@@ -169,6 +169,32 @@ namespace bestAPPever
             }
         }
 
+        //Получаем список запросов в друзья <ИД, имя>
+        public List<KeyValuePair<int, string>> getListNewFriendsOut(string name)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                string requestSQL = "SELECT `friend_id`, `friend_name`, `status` FROM `friends` WHERE (`user_name` = '" + name + "') AND (`status` = 1)";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                MySqlDataReader myDataReader = myCommand.ExecuteReader();
+                List<KeyValuePair<int, string>> newFriendsList = new List<KeyValuePair<int, string>>();
+
+                while (myDataReader.Read())
+                {
+                    newFriendsList.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
+                }
+                myDataReader.Close();
+                myConnection.Close();
+                return newFriendsList;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         //Одобрить заявку в друзья
         public void confirmFriend(int user_id, string user_name, int friend_id, string friend_name)
         {
@@ -192,6 +218,27 @@ namespace bestAPPever
 
         //Отклонить заявку в друзья
         public void rejectFriend(int user_id, string user_name, int friend_id, string friend_name)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                string requestSQL = "DELETE FROM `friends` WHERE ((`user_id` = " + friend_id +
+                    ") AND (`user_name` = '" + friend_name +
+                    "') AND (`friend_id` = " + user_id +
+                    ") AND (`friend_name` = '" + user_name + "')  AND (`status` = 1))";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                myCommand.ExecuteScalar();
+                myConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                //--
+            }
+        }
+
+        //Отклонить заявку в друзья
+        public void rejectFriendOut(int user_id, string user_name, int friend_id, string friend_name)
         {
             try
             {
