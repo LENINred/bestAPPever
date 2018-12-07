@@ -1,11 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 namespace bestAPPever
 {
     class ListUsers
@@ -27,6 +22,8 @@ namespace bestAPPever
                 {
                     users.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
                 }
+                myDataReader.Close();
+                myConnection.Close();
                 return users;
             }
             catch (Exception ex)
@@ -38,11 +35,22 @@ namespace bestAPPever
         //Добавление друга
         public void addFriend(int user_id, string user_name, int friend_id, string friend_name, int status)
         {
+            string requestSQL = "";
+            if (!checkIfFriendAsked(user_id, user_name, friend_id, friend_name, status))
+            {
+                requestSQL = "INSERT INTO `friends`(`user_id`, `user_name`, `friend_id`, `friend_name`, `status`, `date_request`, `date_add`) VALUES ("
+                    + user_id + ",'" + user_name + "'," + friend_id + ",'" + friend_name + "', " + status + ", CURRENT_DATE(), '0000-00-00')";
+            }
+            else
+            {
+                requestSQL = "UPDATE `friends` SET `status` = 2, `date_add`= CURRENT_DATE() WHERE ((`user_id` = " + friend_id +
+                    ") AND (`user_name` = '" + friend_name +
+                    "') AND (`friend_id` = " + user_id +
+                    ") AND (`friend_name` = '" + user_name + "'))";
+            }
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
-                string requestSQL = "INSERT INTO `friends`(`user_id`, `user_name`, `friend_id`, `friend_name`, `status`, `date_request`, `date_add`) VALUES ("
-                    + user_id + ",'" + user_name + "'," + friend_id + ",'" + friend_name + "', " + status + ", CURRENT_DATE(), '0000-00-00')";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
@@ -53,6 +61,36 @@ namespace bestAPPever
                 //--
             }
         }        
+
+        private bool checkIfFriendAsked(int user_id, string user_name, int friend_id, string friend_name, int status)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                string requestSQL = "SELECT `user_id`, `user_name`, `friend_id`, `friend_name`, `status` FROM `friends` WHERE `user_id` = "+ user_id
+                    + " AND `user_name` = '"+ user_name 
+                    + "' AND `friend_id` = "+ friend_id 
+                    + " AND `friend_name` = '"+ friend_name 
+                    + "' AND `status` = 1";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                if (myCommand.ExecuteScalar() == null)
+                {
+                    myConnection.Close();
+                    return false;
+                }
+                else
+                {
+                    myConnection.Close();
+                    return true;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return true;
+            }
+        }
 
         //Удаление друга
         public void removeFriend(string name, int friend_id)
@@ -95,6 +133,8 @@ namespace bestAPPever
                         friendsList.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
                     }
                 }
+                myDataReader.Close();
+                myConnection.Close();
                 return friendsList;
             }
             catch (Exception ex)
@@ -119,6 +159,8 @@ namespace bestAPPever
                 {
                     newFriendsList.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
                 }
+                myDataReader.Close();
+                myConnection.Close();
                 return newFriendsList;
             }
             catch (Exception ex)
@@ -148,7 +190,7 @@ namespace bestAPPever
             }
         }
 
-        //Одобрить заявку в друзья
+        //Отклонить заявку в друзья
         public void rejectFriend(int user_id, string user_name, int friend_id, string friend_name)
         {
             try

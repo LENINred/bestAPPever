@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace bestAPPever
 {
@@ -10,19 +9,16 @@ namespace bestAPPever
     {
         public event EventHandler<MyEventArgs> MyEvent;
         private int User_id;
-        List<KeyValuePair<int, string>> listNewFriends = new List<KeyValuePair<int, string>>();
-        List<KeyValuePair<int, string>> listFriends = new List<KeyValuePair<int, string>>();
-
         public void Method(int user_id, string Login)
         {
             User_id = user_id;
-
-            listFriends = new ListUsers().getListFriends(Login);
+            
             Thread myThread = new Thread(getFriendStatus);
+            myThread.IsBackground = true;
             myThread.Start();
 
-            listNewFriends = new ListUsers().getListNewFriends(Login);
             Thread myThread1 = new Thread(getNewFriendStatus);
+            myThread1.IsBackground = true;
             myThread1.Start();
         }
 
@@ -34,20 +30,17 @@ namespace bestAPPever
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection("Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111");
-                    string requestSQL = "SELECT `user_id`, `user_name` FROM `friends` WHERE ((`friend_id` = " + User_id + ") AND (status = 1))";
+                    string requestSQL = "SELECT `user_id`, `user_name` FROM `friends` WHERE ((`friend_id` = " + User_id + ") AND (status = 1) AND (status_notification = 0))";
                     MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                     myConnection.Open();
                     MySqlDataReader myDataReader = myCommand.ExecuteReader();
-
                     while (myDataReader.Read())
                     {
-                        if (!listNewFriends.Contains(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1))))
-                        {
-                            listNewFriends.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
-                            MyEvent(this, new MyEventArgs(new KeyValuePair<int, string>(1, myDataReader.GetString(1))));
-                        }
+                        updateNotificationStatus(myDataReader.GetInt16(0), User_id);
+                        MyEvent(this, new MyEventArgs(new KeyValuePair<int, string>(1, myDataReader.GetString(1))));
                     }
-
+                    myDataReader.Close();
+                    myConnection.Close();
                 }
                 catch
                 {
@@ -64,24 +57,40 @@ namespace bestAPPever
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection("Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111");
-                    string requestSQL = "SELECT `friend_id`, `friend_name` FROM `friends` WHERE ((`user_id` = " + User_id + ") AND (status = 2))";
+                    string requestSQL = "SELECT `friend_id`, `friend_name` FROM `friends` WHERE ((`user_id` = " + User_id + ") AND (status = 2) AND (status_notification = 0))";
                     MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                     myConnection.Open();
                     MySqlDataReader myDataReader = myCommand.ExecuteReader();
                     while (myDataReader.Read())
                     {
-                        if (!listFriends.Contains(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1))))
-                        {
-                            listFriends.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(0), myDataReader.GetString(1)));
-                            MyEvent(this, new MyEventArgs(new KeyValuePair<int, string>(2, myDataReader.GetString(1))));
-                        }
+                        updateNotificationStatus(User_id, myDataReader.GetInt16(0));
+                        MyEvent(this, new MyEventArgs(new KeyValuePair<int, string>(2, myDataReader.GetString(1))));
                     }
-
+                    myDataReader.Close();
+                    myConnection.Close();
                 }
                 catch
                 {
                     //--
                 }
+            }
+        }
+
+        private void updateNotificationStatus(int user_id, int friend_id)
+        {
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection("Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111");
+                string requestSQL = "UPDATE `friends` SET `status_notification` = 1 WHERE ((`user_id` = " + user_id +
+                    ") AND (`friend_id` = '" + friend_id + "'))";
+                MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
+                myConnection.Open();
+                myCommand.ExecuteScalar();
+                myConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                //--
             }
         }
     }
