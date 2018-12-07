@@ -419,7 +419,7 @@ namespace bestAPPever
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
-            new ListUsers().rejectFriendOut(id, name, User_id, Login);
+            new ListUsers().rejectFriendOut(id, User_id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }
