@@ -308,6 +308,8 @@ namespace bestAPPever
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
             new ListUsers().addFriend(User_id, Login, id, name, 1);
+            ((Form)panel.GetContainerControl()).Controls.RemoveByKey("groupBoxUsers");
+            ((Form)panel.GetContainerControl()).Controls.Add(createGroupBoxUsers());
         }
         ////////////////////
 
@@ -483,6 +485,8 @@ namespace bestAPPever
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
             new ListUsers().removeFriend(Login, id);
+            ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
+            ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }
         ////////////////////
     }

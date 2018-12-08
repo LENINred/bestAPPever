@@ -100,7 +100,8 @@ namespace bestAPPever
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
-                string requestSQL = "DELETE FROM `friends` WHERE `user_name`='" + name + "' AND `friend_id`=" + friend_id;
+                string requestSQL = "DELETE FROM `friends` WHERE (`user_name`='" + name + "' AND `friend_id`=" + friend_id +
+                    ") OR (`user_id`=" + friend_id + " AND `friend_name`='" + name + "')";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
@@ -225,7 +226,6 @@ namespace bestAPPever
                 string requestSQL = "DELETE FROM `friends` WHERE ((`user_id` = " + friend_id +
                     ") AND (`friend_id` = " + user_id +
                     ") AND (`status` = 1))";
-                MessageBox.Show(requestSQL);
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
