@@ -239,34 +239,54 @@ namespace bestAPPever
         //Формирование списка всех пользователей
         private void createUsersList(List<KeyValuePair<int, string>> listUsers, GroupBox groupBoxUsers)
         {
+            List<KeyValuePair<int, string>> listNewFriends = new ListUsers().getListNewFriends(Login);
             List<KeyValuePair<int, string>> listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
+            listNewFriendsOut.AddRange(new ListUsers().getListFriends(Login));
             if (listNewFriendsOut.Count > 0)
                 foreach (KeyValuePair<int, string> newFriendOut in listNewFriendsOut)
                     listUsers.Remove(newFriendOut);
 
+            listUsers.Remove(new KeyValuePair<int, string>(User_id, Login));
+
             int y = 20;
             foreach (KeyValuePair<int, string> user in listUsers)
             {
-                if (user.Value != Login)
+                Label nameUser = new Label();
+                Button buttonAdd = new Button();
+
+                nameUser.Text = user.Value;
+                nameUser.AutoSize = true;
+                nameUser.Location = new Point(10, y + 5);
+
+                buttonAdd.Size = new Size(30, 25);
+                buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonAdd.Text = "+";
+                buttonAdd.Tag = user.Key + ";" + user.Value;
+
+                if (listNewFriends.IndexOf(user) == -1)
                 {
-                    Label nameUser = new Label();
-                    Button buttonAdd = new Button();
-
-                    nameUser.Text = user.Value;
-                    nameUser.AutoSize = true;
-                    nameUser.Location = new Point(10, y + 5);
-
-                    buttonAdd.Size = new Size(30, 25);
-                    buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
-                    buttonAdd.Text = "+";
                     buttonAdd.Location = new Point(75, y);
-                    buttonAdd.Tag = user.Key + ";" + user.Value;
                     buttonAdd.Click += ButtonAdd_Click;
-
-                    groupBoxUsers.Controls.Add(nameUser);
-                    groupBoxUsers.Controls.Add(buttonAdd);
-                    y += 30;
                 }
+                else
+                {
+                    buttonAdd.Location = new Point(75, y);
+                    buttonAdd.Click += ButtonConfirm_Click;
+
+                    Button buttonReject = new Button();
+                    buttonReject.Size = new Size(30, 25);
+                    buttonReject.Font = new Font("Arial", 10, FontStyle.Bold);
+                    buttonReject.Text = "x";
+                    buttonReject.Location = new Point(115, y);
+                    buttonReject.Tag = user.Key + ";" + user.Value;
+                    buttonReject.Click += ButtonReject_Click;
+                    
+                    groupBoxUsers.Controls.Add(buttonReject);
+                }
+
+                groupBoxUsers.Controls.Add(nameUser);
+                groupBoxUsers.Controls.Add(buttonAdd);
+                y += 30;
             }
         }
 
@@ -332,11 +352,9 @@ namespace bestAPPever
         }
 
         //Формирование списка друзей
-        private void createFriendsList(List<KeyValuePair<int, string>> _listUsers, TabPage tabFriends)
+        private void createFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
         {
             int y = 20;
-            List<KeyValuePair<int, string>> listUsers = _listUsers;
-            listUsers.Remove(new KeyValuePair<int, string>(User_id, Login));
             foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
