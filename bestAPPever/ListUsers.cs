@@ -1,6 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
+
 namespace bestAPPever
 {
     class ListUsers
@@ -221,8 +223,9 @@ namespace bestAPPever
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 string requestSQL = "DELETE FROM `friends` WHERE ((`user_id` = " + friend_id +
-                    "') AND (`friend_id` = " + user_id +
+                    ") AND (`friend_id` = " + user_id +
                     ") AND (`status` = 1))";
+                MessageBox.Show(requestSQL);
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
@@ -241,7 +244,7 @@ namespace bestAPPever
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 string requestSQL = "DELETE FROM `friends` WHERE ((`user_id` = " + friend_id +
-                    "') AND (`friend_id` = " + user_id +
+                    ") AND (`friend_id` = " + user_id +
                     ") AND (`status` = 1))";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
