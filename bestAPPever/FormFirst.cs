@@ -78,6 +78,7 @@ namespace bestAPPever
             if ((bool)userData[1].Value)
             {
                 //moveing to pers creation
+                Login = textBoxLogin.Text;
                 this.Text = "Создание персонажа";
                 persCreation();
             }
@@ -98,6 +99,7 @@ namespace bestAPPever
                 {
                     //moveing to pers creation
                     this.Text = "Создание персонажа";
+                    Login = textBoxLogin.Text;
                     persCreation();
                 }
                 else
@@ -239,15 +241,14 @@ namespace bestAPPever
             }
             catch
             {
-                Panel panelMenu = new CreateObjects().createMenu(Login, user_id, new Point(460, 45));
-                this.Controls.Add(panelMenu);
+                this.Controls.Add(new CreateObjects().createMenu(Login, user_id, new Point(460, 45)));
 
-                Button buttonExit = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
-                buttonExit.Click += ButtonExit_Click;
+                Button buttonLogOut = (Button)this.Controls.Find("buttonExit", true).GetValue(0);
+                buttonLogOut.Click += ButtonLogOut_Click;
             }
         }
 
-        private void ButtonExit_Click(object sender, EventArgs e)
+        private void ButtonLogOut_Click(object sender, EventArgs e)
         {
             this.Controls.Clear();
             showFormRegLog();
