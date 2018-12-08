@@ -203,8 +203,8 @@ namespace bestAPPever
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
-                string requestSQL = "UPDATE `friends` SET `status` = 2, `date_add`= CURRENT_DATE() WHERE ((`user_id` = " + friend_id +
-                    "') AND (`friend_id` = " + user_id + "))";
+                string requestSQL = "UPDATE `friends` SET `status` = 2, `date_add`= CURRENT_DATE(), `status_notification` = 0 WHERE ((`user_id` = " + friend_id +
+                    ") AND (`friend_id` = " + user_id + "))";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
