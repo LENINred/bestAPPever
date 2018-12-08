@@ -239,6 +239,11 @@ namespace bestAPPever
         //Формирование списка всех пользователей
         private void createUsersList(List<KeyValuePair<int, string>> listUsers, GroupBox groupBoxUsers)
         {
+            List<KeyValuePair<int, string>> listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
+            if (listNewFriendsOut.Count > 0)
+                foreach (KeyValuePair<int, string> newFriendOut in listNewFriendsOut)
+                    listUsers.Remove(newFriendOut);
+
             int y = 20;
             foreach (KeyValuePair<int, string> user in listUsers)
             {
@@ -302,8 +307,7 @@ namespace bestAPPever
             tabControlFriends.TabPages.Add(tabFriends);
             createFriendsList(new ListUsers().getListFriends(Login), tabFriends);
 
-            List<KeyValuePair<int, string>> listNewFriends = new List<KeyValuePair<int, string>>();
-            listNewFriends = new ListUsers().getListNewFriends(Login);
+            List<KeyValuePair<int, string>> listNewFriends = new ListUsers().getListNewFriends(Login);
             if (listNewFriends.Count > 0)
             {
                 TabPage tabNewFriends = new TabPage();
@@ -312,8 +316,7 @@ namespace bestAPPever
                 createNewFriendsList(listNewFriends, tabNewFriends);
             }
 
-            List<KeyValuePair<int, string>> listNewFriendsOut = new List<KeyValuePair<int, string>>();
-            listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
+            List<KeyValuePair<int, string>> listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
             if (listNewFriendsOut.Count > 0)
             {
                 TabPage tabNewFriendsOut = new TabPage();
@@ -329,9 +332,11 @@ namespace bestAPPever
         }
 
         //Формирование списка друзей
-        private void createFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
+        private void createFriendsList(List<KeyValuePair<int, string>> _listUsers, TabPage tabFriends)
         {
             int y = 20;
+            List<KeyValuePair<int, string>> listUsers = _listUsers;
+            listUsers.Remove(new KeyValuePair<int, string>(User_id, Login));
             foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
@@ -428,7 +433,7 @@ namespace bestAPPever
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
-            new ListUsers().rejectFriend(User_id, Login, id, name);
+            new ListUsers().rejectFriend(User_id, id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }
@@ -437,7 +442,7 @@ namespace bestAPPever
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
             string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
-            new ListUsers().confirmFriend(User_id, Login, id, name);
+            new ListUsers().confirmFriend(User_id, id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }

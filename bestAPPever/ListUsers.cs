@@ -196,15 +196,13 @@ namespace bestAPPever
         }
 
         //Одобрить заявку в друзья
-        public void confirmFriend(int user_id, string user_name, int friend_id, string friend_name)
+        public void confirmFriend(int user_id, int friend_id)
         {
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 string requestSQL = "UPDATE `friends` SET `status` = 2, `date_add`= CURRENT_DATE() WHERE ((`user_id` = " + friend_id +
-                    ") AND (`user_name` = '" + friend_name +
-                    "') AND (`friend_id` = " + user_id +
-                    ") AND (`friend_name` = '" + user_name + "'))";
+                    "') AND (`friend_id` = " + user_id + "))";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
@@ -217,15 +215,14 @@ namespace bestAPPever
         }
 
         //Отклонить заявку в друзья
-        public void rejectFriend(int user_id, string user_name, int friend_id, string friend_name)
+        public void rejectFriend(int user_id, int friend_id)
         {
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 string requestSQL = "DELETE FROM `friends` WHERE ((`user_id` = " + friend_id +
-                    ") AND (`user_name` = '" + friend_name +
                     "') AND (`friend_id` = " + user_id +
-                    ") AND (`friend_name` = '" + user_name + "')  AND (`status` = 1))";
+                    ") AND (`status` = 1))";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
