@@ -257,6 +257,7 @@ namespace bestAPPever
         private void persCreation()
         {
             this.Controls.Clear();
+            this.Controls.Add(statusStrip);
             textBoxPersName = new CreateObjects().createTextBox("PersName", new Point(12, 12));
             comboBoxSex = new CreateObjects().createComboBox("Sex", new Point(12, 36));
             Button persCreationOk = new CreateObjects().createButton("persCreationOk", "Ok", new Point(12, 400));
@@ -357,7 +358,6 @@ namespace bestAPPever
                 log += "Имя персонажа должно быть длиннее 4х символов";
             }
             ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = log;
-            statusStrip.Refresh();
             this.Text = "Игра";
         }
     }
