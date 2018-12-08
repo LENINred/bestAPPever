@@ -185,8 +185,7 @@ namespace bestAPPever
             myNewSqlListener.MyEvent += MyNewSqlListener_MyEvent;
             myNewSqlListener.Method(user_id, Login);
         }
-
-        List<string> users_request = new List<string>();
+        
         string notif = "";
         private void MyNewSqlListener_MyEvent(object sender, MyEventArgs e)
         {
@@ -197,7 +196,6 @@ namespace bestAPPever
             }
             if(e.UserStatus.Key == 1)
             {
-                users_request.Add(e.UserStatus.Value);
                 notif = e.UserStatus.Value + " прислал вам заявку в друзья";
                 showNotification();
             }
@@ -213,6 +211,8 @@ namespace bestAPPever
             {
                 GroupBox groupBox = new CreateObjects().createNotification(notif, this.Controls);
                 this.Controls.Add(groupBox);
+
+                this.Controls.Add(new CreateObjects().createNotificatioDOT(new Point(600, 25)));
 
                 Timer timer = new Timer();
                 timer.Tick += (sender, e) => MyTimer_Tick(sender, e, groupBox.Name);
@@ -231,6 +231,7 @@ namespace bestAPPever
         {
             try
             {
+                this.Controls.RemoveByKey("pictureDOT");
                 this.Controls.Find("panelMenu", true).GetValue(0);
                 this.Controls.RemoveByKey("panelMenu");
                 this.Controls.RemoveByKey("groupBoxUsers");

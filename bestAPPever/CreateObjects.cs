@@ -172,8 +172,6 @@ namespace bestAPPever
             }
             return groupBoxNotification;
         }
-
-
         ////////////////
 
         /////////////////////Создание Меню/////////////////////
@@ -205,6 +203,21 @@ namespace bestAPPever
             buttonListFriends.Click += ButtonListFriends_Click;
 
             return panel;
+        }
+
+        public PictureBox createNotificatioDOT(Point point)
+        {
+            PictureBox pictureBox = new PictureBox();
+            pictureBox.Name = "pictureDOT";
+            pictureBox.Size = new Size(10, 10);
+            pictureBox.Location = point;
+
+            pictureBox.Image = new Bitmap(pictureBox.Width, pictureBox.Height);
+            Graphics graphics = Graphics.FromImage(pictureBox.Image);
+            Brush brush = new SolidBrush(Color.Red);
+            graphics.FillRectangle(brush, new System.Drawing.Rectangle(0, 0, pictureBox.Width, pictureBox.Height));
+
+            return pictureBox;
         }
 
         //////////Панель всех людей//////////
