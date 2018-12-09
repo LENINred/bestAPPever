@@ -11,7 +11,7 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
+#[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -36,7 +36,7 @@ bld/
 TestResult.xml
 
 # Build Results of an ATL Project
-#[Dd]ebugPS/
+[Dd]ebugPS/
 [Rr]eleasePS/
 dlldata.c
 
