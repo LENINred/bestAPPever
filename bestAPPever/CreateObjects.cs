@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace bestAPPever
@@ -244,24 +245,51 @@ namespace bestAPPever
             groupBoxUsers.Text = "Поиск людей";
             groupBoxUsers.Size = new Size(panel.Size.Width - 40, panel.Size.Height);
             groupBoxUsers.Location = new Point(panel.Location.X - groupBoxUsers.Size.Width, 0);
+
+            TextBox textBoxSearch = new TextBox();
+            textBoxSearch.Name = "textBoxSearchUsers";
+            textBoxSearch.Size = new Size(100, 20);
+            textBoxSearch.Location = new Point(10, 20);
+            textBoxSearch.Tag = "forsearch";
+            textBoxSearch.TextChanged += (sender, e) => TextBoxSearch_TextChanged(sender, e, groupBoxUsers);
+            
+            groupBoxUsers.Controls.Add(textBoxSearch);
+            
             createUsersList(new ListUsers().getListUsers(), groupBoxUsers);
 
             return groupBoxUsers;
         }
 
+        private void TextBoxSearch_TextChanged(object sender, EventArgs e, GroupBox groupBox)
+        {
+            List<KeyValuePair<int, string>> listUsers = new ListUsers().getListUsers();
+            foreach (KeyValuePair<int, string> user in listUsers.ToArray())
+            {
+                if (!user.Value.StartsWith(((TextBox)sender).Text))
+                {
+                    listUsers.Remove(user);
+                }
+            }
+
+            createUsersList(listUsers, groupBox);
+        }
+
         //Формирование списка всех пользователей
         private void createUsersList(List<KeyValuePair<int, string>> listUsers, GroupBox groupBoxUsers)
         {
+            groupBoxUsers.Controls.OfType<Button>().ToList().ForEach(btn => btn.Dispose());
+            groupBoxUsers.Controls.OfType<Label>().ToList().ForEach(lbl => lbl.Dispose());
+
             List<KeyValuePair<int, string>> listNewFriends = new ListUsers().getListNewFriends(Login);
             List<KeyValuePair<int, string>> listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
             listNewFriendsOut.AddRange(new ListUsers().getListFriends(Login));
+
             if (listNewFriendsOut.Count > 0)
                 foreach (KeyValuePair<int, string> newFriendOut in listNewFriendsOut)
                     listUsers.Remove(newFriendOut);
-
             listUsers.Remove(new KeyValuePair<int, string>(User_id, Login));
 
-            int y = 20;
+            int y = 45;
             foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
@@ -270,11 +298,14 @@ namespace bestAPPever
                 nameUser.Text = user.Value;
                 nameUser.AutoSize = true;
                 nameUser.Location = new Point(10, y + 5);
+                nameUser.Tag = user.Value;
+                nameUser.Name = "user" + user.Value;
 
                 buttonAdd.Size = new Size(30, 25);
                 buttonAdd.Font = new Font("Arial", 10, FontStyle.Bold);
                 buttonAdd.Text = "+";
                 buttonAdd.Tag = user.Key + ";" + user.Value;
+                buttonAdd.Name = "userid" + user.Key;
 
                 if (listNewFriends.IndexOf(user) == -1)
                 {
@@ -340,6 +371,16 @@ namespace bestAPPever
             TabPage tabFriends = new TabPage();
             tabFriends.Text = "Друзья";
             tabControlFriends.TabPages.Add(tabFriends);
+
+            TextBox textBoxSearch = new TextBox();
+            textBoxSearch.Name = "textBoxSearchUsers";
+            textBoxSearch.Size = new Size(100, 20);
+            textBoxSearch.Location = new Point(10, 20);
+            textBoxSearch.Tag = "forsearch";
+            textBoxSearch.TextChanged += (sender, e) => TextBoxSearch_TextChanged(sender, e, tabFriends);
+
+            tabFriends.Controls.Add(textBoxSearch);
+
             createFriendsList(new ListUsers().getListFriends(Login), tabFriends);
 
             List<KeyValuePair<int, string>> listNewFriends = new ListUsers().getListNewFriends(Login);
@@ -366,10 +407,27 @@ namespace bestAPPever
             return tabControlFriends;
         }
 
+        private void TextBoxSearch_TextChanged(object sender, EventArgs e, TabPage tabPage)
+        {
+            List<KeyValuePair<int, string>> listUsers = new ListUsers().getListFriends(Login);
+            foreach (KeyValuePair<int, string> user in listUsers.ToArray())
+            {
+                if (!user.Value.StartsWith(((TextBox)sender).Text))
+                {
+                    listUsers.Remove(user);
+                }
+            }
+
+            createFriendsList(listUsers, tabPage);
+        }
+
         //Формирование списка друзей
         private void createFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
         {
-            int y = 20;
+            tabFriends.Controls.OfType<Button>().ToList().ForEach(btn => btn.Dispose());
+            tabFriends.Controls.OfType<Label>().ToList().ForEach(lbl => lbl.Dispose());
+
+            int y = 45;
             foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
@@ -395,7 +453,10 @@ namespace bestAPPever
         //Формирование списка входящих заявок
         private void createNewFriendsList(List<KeyValuePair<int, string>> listUsers, TabPage tabFriends)
         {
-            int y = 20;
+            tabFriends.Controls.OfType<Button>().ToList().ForEach(btn => btn.Dispose());
+            tabFriends.Controls.OfType<Label>().ToList().ForEach(lbl => lbl.Dispose());
+
+            int y = 45;
             foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
