@@ -371,16 +371,21 @@ namespace bestAPPever
             tabFriends.Text = "Друзья";
             tabControlFriends.TabPages.Add(tabFriends);
 
-            TextBox textBoxSearch = new TextBox();
-            textBoxSearch.Name = "textBoxSearchUsers";
-            textBoxSearch.Size = new Size(100, 20);
-            textBoxSearch.Location = new Point(10, 20);
-            textBoxSearch.Tag = "forsearch";
-            textBoxSearch.TextChanged += (sender, e) => TextBoxSearch_TextChanged(sender, e, tabFriends);
+            List<KeyValuePair<int, string>> listFriends = new ListUsers().getListFriends(Login);
 
-            tabFriends.Controls.Add(textBoxSearch);
+            if(listFriends.Count > 3)
+            {
+                TextBox textBoxSearch = new TextBox();
+                textBoxSearch.Name = "textBoxSearchUsers";
+                textBoxSearch.Size = new Size(100, 20);
+                textBoxSearch.Location = new Point(10, 20);
+                textBoxSearch.Tag = "forsearch";
+                textBoxSearch.TextChanged += (sender, e) => TextBoxSearch_TextChanged(sender, e, tabFriends);
 
-            createFriendsList(new ListUsers().getListFriends(Login), tabFriends);
+                tabFriends.Controls.Add(textBoxSearch);
+            }
+
+            createFriendsList(listFriends, tabFriends);
 
             List<KeyValuePair<int, string>> listNewFriends = new ListUsers().getListNewFriends(Login);
             if (listNewFriends.Count > 0)
