@@ -9,23 +9,23 @@ namespace bestAPPever
     class CreateObjects
     {
         //Создание текстовых полей
-        public TextBox createTextBox(string name, System.Drawing.Point point)
+        public TextBox createTextBox(string name, Point point)
         {
             TextBox textBox = new TextBox();
             textBox.Name = "textBox" + name;
             textBox.Location = point;
-            textBox.Size = new System.Drawing.Size(100, 12);
+            textBox.Size = new Size(100, 12);
             textBox.MaxLength = 16;
             textBox.KeyPress += TextBox_KeyPress;
             return textBox;
         }        
 
-        public TextBox createTextBox(string name, System.Drawing.Point point, bool hide)
+        public TextBox createTextBox(string name, Point point, bool hide)
         {
             TextBox textBox = new TextBox();
             textBox.Name = "textBox" + name;
             textBox.Location = point;
-            textBox.Size = new System.Drawing.Size(100, 12);
+            textBox.Size = new Size(100, 12);
             textBox.UseSystemPasswordChar = hide;
             textBox.MaxLength = 16;
             textBox.KeyPress += TextBox_KeyPress;
@@ -43,13 +43,13 @@ namespace bestAPPever
         }
 
         //Создание кнопок
-        public Button createButton(string name, string text, System.Drawing.Point point)
+        public Button createButton(string name, string text, Point point)
         {
             Button button = new Button();
             button.Name = "button" + name;
             button.Text = text;
             button.Location = point;
-            button.Size = new System.Drawing.Size(100, 23);
+            button.Size = new Size(100, 23);
             return button;
         }
 
@@ -68,7 +68,7 @@ namespace bestAPPever
         }
 
         string p = "";
-        public PictureBox createArrow(string name, string path, System.Drawing.Point point)
+        public PictureBox createArrow(string name, string path, Point point)
         {
             p = path;
             PictureBox pictureBox = new PictureBox();
@@ -86,12 +86,12 @@ namespace bestAPPever
         public List<PictureBox> createArrows()
         {
             List<PictureBox> arrows = new List<PictureBox>();
-            PictureBox headArrowNext = new CreateObjects().createArrow("nextHead", "arrowRight", new System.Drawing.Point(290, 140));
-            PictureBox bodyArrowNext = new CreateObjects().createArrow("nextBody", "arrowRight", new System.Drawing.Point(290, 250));
-            PictureBox legsArrowNext = new CreateObjects().createArrow("nextLegs", "arrowRight", new System.Drawing.Point(290, 340));
-            PictureBox headArrowPrev = new CreateObjects().createArrow("prevHead", "arrowLeft", new System.Drawing.Point(100, 140));
-            PictureBox bodyArrowPrev = new CreateObjects().createArrow("prevBody", "arrowLeft", new System.Drawing.Point(100, 250));
-            PictureBox legsArrowPrev = new CreateObjects().createArrow("prevLegs", "arrowLeft", new System.Drawing.Point(100, 340));
+            PictureBox headArrowNext = new CreateObjects().createArrow("nextHead", "arrowRight", new Point(290, 140));
+            PictureBox bodyArrowNext = new CreateObjects().createArrow("nextBody", "arrowRight", new Point(290, 250));
+            PictureBox legsArrowNext = new CreateObjects().createArrow("nextLegs", "arrowRight", new Point(290, 340));
+            PictureBox headArrowPrev = new CreateObjects().createArrow("prevHead", "arrowLeft", new Point(100, 140));
+            PictureBox bodyArrowPrev = new CreateObjects().createArrow("prevBody", "arrowLeft", new Point(100, 250));
+            PictureBox legsArrowPrev = new CreateObjects().createArrow("prevLegs", "arrowLeft", new Point(100, 340));
 
             arrows.Add(headArrowNext);
             arrows.Add(bodyArrowNext);
@@ -113,7 +113,7 @@ namespace bestAPPever
         }
 
         //Создание меток
-        public Label createLabel(string name, string text, System.Drawing.Point point)
+        public Label createLabel(string name, string text, Point point)
         {
             Label label = new Label();
             label.Location = point;
@@ -123,13 +123,13 @@ namespace bestAPPever
             return label;
         }
 
-        public ComboBox createComboBox(string name, System.Drawing.Point point)
+        public ComboBox createComboBox(string name, Point point)
         {
             ComboBox comboBox = new ComboBox();
             comboBox.Location = point;
             comboBox.Name = "comboBox" + name;
             comboBox.Text = "Пол";
-            comboBox.Size = new System.Drawing.Size(100, 12);
+            comboBox.Size = new Size(100, 12);
             comboBox.Items.Add("Женский");
             comboBox.Items.Add("Мужской");
             return comboBox;
@@ -216,13 +216,13 @@ namespace bestAPPever
             pictureBox.Image = new Bitmap(pictureBox.Width, pictureBox.Height);
             Graphics graphics = Graphics.FromImage(pictureBox.Image);
             Brush brush = new SolidBrush(Color.Red);
-            graphics.FillRectangle(brush, new System.Drawing.Rectangle(0, 0, pictureBox.Width, pictureBox.Height));
+            graphics.FillRectangle(brush, new Rectangle(0, 0, pictureBox.Width, pictureBox.Height));
 
             return pictureBox;
         }
 
         //////////Панель всех людей//////////
-        private void ButtoтFindUsers_Click(object sender, System.EventArgs e)
+        private void ButtoтFindUsers_Click(object sender, EventArgs e)
         {
             Form form = (Form)panel.GetContainerControl();
             try
@@ -230,7 +230,7 @@ namespace bestAPPever
                 form.Controls.Find("groupBoxUsers", true).GetValue(0);
                 form.Controls.RemoveByKey("groupBoxUsers");
             }
-            catch(Exception ex)
+            catch
             {
                 form.Controls.RemoveByKey("tabControlFriends");
                 form.Controls.Add(createGroupBoxUsers());
@@ -255,14 +255,14 @@ namespace bestAPPever
             
             groupBoxUsers.Controls.Add(textBoxSearch);
             
-            createUsersList(new ListUsers().getListUsers(), groupBoxUsers);
+            createUsersList(new ListUsers().getListUsers(Login), groupBoxUsers);
 
             return groupBoxUsers;
         }
 
         private void TextBoxSearch_TextChanged(object sender, EventArgs e, GroupBox groupBox)
         {
-            List<KeyValuePair<int, string>> listUsers = new ListUsers().getListUsers();
+            List<KeyValuePair<int, string>> listUsers = new ListUsers().getListUsers(Login);
             foreach (KeyValuePair<int, string> user in listUsers.ToArray())
             {
                 if (!user.Value.StartsWith(((TextBox)sender).Text))
@@ -270,7 +270,6 @@ namespace bestAPPever
                     listUsers.Remove(user);
                 }
             }
-
             createUsersList(listUsers, groupBox);
         }
 
@@ -281,13 +280,6 @@ namespace bestAPPever
             groupBoxUsers.Controls.OfType<Label>().ToList().ForEach(lbl => lbl.Dispose());
 
             List<KeyValuePair<int, string>> listNewFriends = new ListUsers().getListNewFriends(Login);
-            List<KeyValuePair<int, string>> listNewFriendsOut = new ListUsers().getListNewFriendsOut(Login);
-            listNewFriendsOut.AddRange(new ListUsers().getListFriends(Login));
-
-            if (listNewFriendsOut.Count > 0)
-                foreach (KeyValuePair<int, string> newFriendOut in listNewFriendsOut)
-                    listUsers.Remove(newFriendOut);
-            listUsers.Remove(new KeyValuePair<int, string>(User_id, Login));
 
             int y = 45;
             foreach (KeyValuePair<int, string> user in listUsers)
@@ -337,7 +329,7 @@ namespace bestAPPever
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
-            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            string name = ((Button)sender).Tag.ToString().Substring(((Button)sender).Tag.ToString().IndexOf(';') + 1, ((Button)sender).Tag.ToString().Length - ((Button)sender).Tag.ToString().IndexOf(';') - 1);
             new ListUsers().addFriend(User_id, Login, id, name, 1);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("groupBoxUsers");
             ((Form)panel.GetContainerControl()).Controls.Add(createGroupBoxUsers());
@@ -345,7 +337,6 @@ namespace bestAPPever
         ////////////////////
 
         //////////Панель друзей/заявок//////////
-        TabControl tabControlFriends = new TabControl();
         private void ButtonListFriends_Click(object sender, EventArgs e)
         {
             Form form = (Form)panel.GetContainerControl();
@@ -354,10 +345,9 @@ namespace bestAPPever
                 form.Controls.Find("tabControlFriends", true).GetValue(0);
                 form.Controls.RemoveByKey("tabControlFriends");
             }
-            catch (Exception ex)
+            catch
             {
                 form.Controls.RemoveByKey("groupBoxUsers");
-
                 form.Controls.Add(createTabControlFriends());
             }
         }
@@ -517,8 +507,8 @@ namespace bestAPPever
         private void ButtonRejectOut_Click(object sender, EventArgs e)
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
-            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
-            new ListUsers().rejectFriendOut(id, User_id);
+            string name = ((Button)sender).Tag.ToString().Substring(((Button)sender).Tag.ToString().IndexOf(';') + 1, ((Button)sender).Tag.ToString().Length - ((Button)sender).Tag.ToString().IndexOf(';') - 1);
+            new ListUsers().cancelFriendRequest(id, User_id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
         }
@@ -526,7 +516,7 @@ namespace bestAPPever
         private void ButtonReject_Click(object sender, EventArgs e)
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
-            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            string name = ((Button)sender).Tag.ToString().Substring(((Button)sender).Tag.ToString().IndexOf(';') + 1, ((Button)sender).Tag.ToString().Length - ((Button)sender).Tag.ToString().IndexOf(';') - 1);
             new ListUsers().rejectFriend(User_id, id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
@@ -535,7 +525,7 @@ namespace bestAPPever
         private void ButtonConfirm_Click(object sender, EventArgs e)
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
-            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            string name = ((Button)sender).Tag.ToString().Substring(((Button)sender).Tag.ToString().IndexOf(';') + 1, ((Button)sender).Tag.ToString().Length - ((Button)sender).Tag.ToString().IndexOf(';') - 1);
             new ListUsers().confirmFriend(User_id, id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());
@@ -544,7 +534,7 @@ namespace bestAPPever
         private void ButtonRemove_Click(object sender, EventArgs e)
         {
             int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
-            string name = ((Button)sender).Tag.ToString().Substring((((Button)sender).Tag.ToString().IndexOf(';') + 1), ((((Button)sender).Tag.ToString().Length) - ((Button)sender).Tag.ToString().IndexOf(';')) - 1);
+            string name = ((Button)sender).Tag.ToString().Substring(((Button)sender).Tag.ToString().IndexOf(';') + 1, ((Button)sender).Tag.ToString().Length - ((Button)sender).Tag.ToString().IndexOf(';') - 1);
             new ListUsers().removeFriend(Login, id);
             ((Form)panel.GetContainerControl()).Controls.RemoveByKey("tabControlFriends");
             ((Form)panel.GetContainerControl()).Controls.Add(createTabControlFriends());

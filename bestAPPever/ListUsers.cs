@@ -1,7 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace bestAPPever
 {
@@ -10,12 +8,12 @@ namespace bestAPPever
         string Connect = "Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111";
 
         //Список всех пользователей<ИД, имя>
-        public List<KeyValuePair<int,string>> getListUsers()
+        public List<KeyValuePair<int,string>> getListUsers(string login)
         {
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
-                string requestSQL = "SELECT `user_id`, `name` FROM `users`";
+                string requestSQL = "SELECT `user_id`, `name` FROM `users` WHERE `name` != '" + login + "'";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 MySqlDataReader myDataReader = myCommand.ExecuteReader();
@@ -26,9 +24,16 @@ namespace bestAPPever
                 }
                 myDataReader.Close();
                 myConnection.Close();
+
+                //Отсеиваем исходящие заявки и друзей
+                List<KeyValuePair<int, string>> listNewFriendsOut = new ListUsers().getListNewFriendsOut(login);
+                listNewFriendsOut.AddRange(new ListUsers().getListFriends(login));
+                foreach (KeyValuePair<int, string> user in listNewFriendsOut)
+                    users.Remove(user);
+
                 return users;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -38,7 +43,7 @@ namespace bestAPPever
         public void addFriend(int user_id, string user_name, int friend_id, string friend_name, int status)
         {
             string requestSQL = "";
-            if (!checkIfFriendAsked(user_id, user_name, friend_id, friend_name, status))
+            if (!checkIfFriendAsked(user_id, friend_id, status))
             {
                 requestSQL = "INSERT INTO `friends`(`user_id`, `user_name`, `friend_id`, `friend_name`, `status`, `date_request`, `date_add`) VALUES ("
                     + user_id + ",'" + user_name + "'," + friend_id + ",'" + friend_name + "', " + status + ", CURRENT_DATE(), '0000-00-00')";
@@ -46,9 +51,7 @@ namespace bestAPPever
             else
             {
                 requestSQL = "UPDATE `friends` SET `status` = 2, `date_add`= CURRENT_DATE() WHERE ((`user_id` = " + friend_id +
-                    ") AND (`user_name` = '" + friend_name +
-                    "') AND (`friend_id` = " + user_id +
-                    ") AND (`friend_name` = '" + user_name + "'))";
+                    "') AND (`friend_id` = " + user_id + "))";
             }
             try
             {
@@ -58,21 +61,20 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 //--
             }
         }        
 
-        private bool checkIfFriendAsked(int user_id, string user_name, int friend_id, string friend_name, int status)
+        //Проверка был ли запрос в друзья от пользователя
+        private bool checkIfFriendAsked(int user_id, int friend_id, int status)
         {
             try
             {
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 string requestSQL = "SELECT `user_id`, `user_name`, `friend_id`, `friend_name`, `status` FROM `friends` WHERE `user_id` = "+ user_id
-                    + " AND `user_name` = '"+ user_name 
-                    + "' AND `friend_id` = "+ friend_id 
-                    + " AND `friend_name` = '"+ friend_name 
+                    + "' AND `friend_id` = "+ friend_id
                     + "' AND `status` = 1";
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
@@ -86,9 +88,8 @@ namespace bestAPPever
                     myConnection.Close();
                     return true;
                 }
-                
             }
-            catch (Exception ex)
+            catch
             {
                 return true;
             }
@@ -107,7 +108,7 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 //--
             }
@@ -140,7 +141,7 @@ namespace bestAPPever
                 myConnection.Close();
                 return friendsList;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -166,7 +167,7 @@ namespace bestAPPever
                 myConnection.Close();
                 return newFriendsList;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -192,7 +193,7 @@ namespace bestAPPever
                 myConnection.Close();
                 return newFriendsList;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -211,7 +212,7 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 //--
             }
@@ -231,14 +232,14 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 //--
             }
         }
 
         //Отклонить заявку в друзья
-        public void rejectFriendOut(int user_id, int friend_id)
+        public void cancelFriendRequest(int user_id, int friend_id)
         {
             try
             {
@@ -251,7 +252,7 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 //--
             }
