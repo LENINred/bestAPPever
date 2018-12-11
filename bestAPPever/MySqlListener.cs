@@ -26,7 +26,7 @@ namespace bestAPPever
         {
             while (true)
             {
-                System.Threading.Thread.Sleep(3000);
+                Thread.Sleep(3000);
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection("Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111");
@@ -53,7 +53,7 @@ namespace bestAPPever
         {
             while (true)
             {
-                System.Threading.Thread.Sleep(3000);
+                Thread.Sleep(3000);
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection("Database=bestAPPever;Data Source=195.114.3.231;User Id=tamagochi;Password=111");

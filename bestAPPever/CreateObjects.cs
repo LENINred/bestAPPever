@@ -262,15 +262,24 @@ namespace bestAPPever
 
         private void TextBoxSearch_TextChanged(object sender, EventArgs e, GroupBox groupBox)
         {
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Tick += (sender0, e0) => MyTimer_Tick(sender0, e0, groupBox,((TextBox)sender).Text);
+            timer.Interval = 2000;
+            timer.Start();
+        }
+
+        private void MyTimer_Tick(object sender, EventArgs e, GroupBox groupBox, string text)
+        {
             List<KeyValuePair<int, string>> listUsers = new ListUsers().getListUsers(Login);
             foreach (KeyValuePair<int, string> user in listUsers.ToArray())
             {
-                if (!user.Value.StartsWith(((TextBox)sender).Text))
+                if (!user.Value.StartsWith(text))
                 {
                     listUsers.Remove(user);
                 }
             }
             createUsersList(listUsers, groupBox);
+            ((System.Windows.Forms.Timer)sender).Stop();
         }
 
         //Формирование списка всех пользователей
