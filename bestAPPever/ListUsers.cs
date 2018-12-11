@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace bestAPPever
 {
@@ -70,9 +71,9 @@ namespace bestAPPever
         //Проверка был ли запрос в друзья от пользователя
         private bool checkIfFriendAsked(int user_id, int friend_id, int status)
         {
+            MySqlConnection myConnection = new MySqlConnection(Connect);
             try
             {
-                MySqlConnection myConnection = new MySqlConnection(Connect);
                 string requestSQL = "SELECT `user_id`, `user_name`, `friend_id`, `friend_name`, `status` FROM `friends` WHERE `user_id` = "+ user_id
                     + "' AND `friend_id` = "+ friend_id
                     + "' AND `status` = 1";
@@ -91,7 +92,8 @@ namespace bestAPPever
             }
             catch
             {
-                return true;
+                myConnection.Close();
+                return false;
             }
         }
 
