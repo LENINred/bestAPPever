@@ -192,18 +192,27 @@ namespace bestAPPever
             Label labelLogin = createLabel("UserLogin", login, new Point(80, 30));
             Button buttonListFriends = createButton("ListFriends", "Список друзей", new Point(50, 60));
             Button buttonFindUsers = createButton("FindFriends", "Поиск друзей", new Point(50, 85));
-            Button buttonSettings = createButton("Settings", "Настройки", new Point(50, 110));
-            Button buttonLogOut = createButton("Exit", "Выход", new Point(50, 135));
+            Button buttonMessaging = createButton("Messaging", "Переписки", new Point(50, 110));
+            Button buttonSettings = createButton("Settings", "Настройки", new Point(50, 135));
+            Button buttonLogOut = createButton("Exit", "Выход", new Point(50, 160));
             panel.Controls.Add(labelLogin);
             panel.Controls.Add(buttonListFriends);
+            panel.Controls.Add(buttonMessaging);
             panel.Controls.Add(buttonFindUsers);
             panel.Controls.Add(buttonSettings);
             panel.Controls.Add(buttonLogOut);
 
             buttonFindUsers.Click += ButtoтFindUsers_Click;
             buttonListFriends.Click += ButtonListFriends_Click;
+            buttonMessaging.Click += ButtonMessaging_Click;
 
             return panel;
+        }
+
+        private void ButtonMessaging_Click(object sender, EventArgs e)
+        {
+            FormMessaging formMessaging = new FormMessaging(Login, User_id);
+            formMessaging.Show();
         }
 
         public PictureBox createNotificatioDOT(Point point)
@@ -435,23 +444,40 @@ namespace bestAPPever
             foreach (KeyValuePair<int, string> user in listUsers)
             {
                 Label nameUser = new Label();
-                Button buttonRemove = new Button();
-
                 nameUser.Text = user.Value;
                 nameUser.AutoSize = true;
                 nameUser.Location = new Point(10, y + 5);
 
+                Button buttonRemove = new Button();
                 buttonRemove.Size = new Size(30, 25);
                 buttonRemove.Font = new Font("Arial", 10, FontStyle.Bold);
                 buttonRemove.Text = "x";
-                buttonRemove.Location = new Point(75, y);
+                buttonRemove.Location = new Point(90, y);
                 buttonRemove.Tag = user.Key + ";" + user.Value;
                 buttonRemove.Click += ButtonRemove_Click;
 
+                Button buttonMessage = new Button();
+                buttonMessage.Size = new Size(30, 25);
+                buttonMessage.Font = new Font("Arial", 10, FontStyle.Bold);
+                buttonMessage.Text = "->";
+                buttonMessage.Location = new Point(120, y);
+                buttonMessage.Tag = user.Key + ";" + user.Value;
+                buttonMessage.Click += ButtonMessage_Click;
+
                 tabFriends.Controls.Add(nameUser);
                 tabFriends.Controls.Add(buttonRemove);
+                tabFriends.Controls.Add(buttonMessage);
                 y += 30;
             }
+        }
+
+        private void ButtonMessage_Click(object sender, EventArgs e)
+        {
+            int id = short.Parse(((Button)sender).Tag.ToString().Substring(0, ((Button)sender).Tag.ToString().IndexOf(';')));
+            string name = ((Button)sender).Tag.ToString().Substring(((Button)sender).Tag.ToString().IndexOf(';') + 1, ((Button)sender).Tag.ToString().Length - ((Button)sender).Tag.ToString().IndexOf(';') - 1);
+
+            FormMessaging formMessaging = new FormMessaging(Login, User_id, name, id);
+            formMessaging.Show();
         }
 
         //Формирование списка входящих заявок
