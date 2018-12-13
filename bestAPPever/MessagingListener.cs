@@ -31,19 +31,19 @@ namespace bestAPPever
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection("Database=messages;Data Source=195.114.3.231;User Id=tamagochi_m;Password=111");
-                    string requestSQL = "SELECT `message`, `date_send` FROM `" + To_login + "_messages` WHERE `status` = 0 AND `from_who` = " + From_id;
+                    string requestSQL = "SELECT `message`, `date_send`, `from_who` FROM `" + To_login + "_messages` WHERE `status` = 0 AND `from_who` = " + From_id;
                     MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                     myConnection.Open();
                     MySqlDataReader myDataReader = myCommand.ExecuteReader();
-                    List<string> messages = new List<string>();
+                    List<KeyValuePair<int, string>> messages_ids = new List<KeyValuePair<int, string>>();
                     while (myDataReader.Read())
                     {
-                        messages.Add(myDataReader.GetString(0));
+                        messages_ids.Add(new KeyValuePair<int, string>(myDataReader.GetInt16(2), myDataReader.GetString(0)));
                     }
                     myDataReader.Close();
                     myConnection.Close();
                     updateMessageStatus();
-                    MessagingEvent(this, new MessagingEventArgs(messages));
+                    MessagingEvent(this, new MessagingEventArgs(messages_ids));
                 }
                 catch
                 {
@@ -80,11 +80,11 @@ namespace bestAPPever
 
     public class MessagingEventArgs : EventArgs
     {
-        public List<string> Messages { get; set; }
+        public List<KeyValuePair<int, string>> Messages_ids { get; set; }
 
-        public MessagingEventArgs(List<string> messages)
+        public MessagingEventArgs(List<KeyValuePair<int, string>> messages_ids)
         {
-            Messages = messages;
+            Messages_ids = messages_ids;
         }
     }
 }

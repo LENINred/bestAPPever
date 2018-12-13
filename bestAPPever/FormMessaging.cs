@@ -33,6 +33,7 @@ namespace bestAPPever
 
             new MessagingClass().createDialog(login, id, user_login, user_id);
             new MessagingClass().createMessagesTable(login, id, user_login, user_id);
+            groupBoxMessages.Text = "Переписка с " + user_login;
 
             loadDialogues();
             choosenDialog = new KeyValuePair<int, string>(user_id, user_login);
@@ -49,26 +50,34 @@ namespace bestAPPever
 
         private void MessagingListener_MessagingEvent(object sender, MessagingEventArgs e)
         {
-            addNewMessage(e.Messages);
+            addNewMessage(e.Messages_ids);
         }
 
-        private void addNewMessage(List<string> messages)
+        private void addNewMessage(List<KeyValuePair<int, string>> messages_ids)
         {
             if (this.InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => addNewMessage(messages)));
+                Invoke(new MethodInvoker(() => addNewMessage(messages_ids)));
             }
             else
             {
-                foreach (string message in messages)
+                foreach (KeyValuePair<int, string> message_id in messages_ids)
                 {
-                    Label label_message = new Label();
-                    label_message.AutoSize = true;
-                    label_message.Font = new Font("Arial", 10, FontStyle.Bold);
-                    label_message.Text = message;
-                    label_message.Dock = DockStyle.Left;
-                    tableLayoutPanelMessages.RowStyles.Add(new RowStyle(SizeType.Absolute, label_message.Height));
-                    tableLayoutPanelMessages.Controls.Add(label_message);
+                    if (message_id.Key == choosenDialog.Key)
+                    {
+                        Label label_message = new Label();
+                        label_message.AutoSize = true;
+                        label_message.Font = new Font("Arial", 10, FontStyle.Bold);
+                        label_message.Text = message_id.Value;
+                        label_message.Tag = message_id.Key;
+                        label_message.Dock = DockStyle.Left;
+                        tableLayoutPanelMessages.Controls.Add(label_message, 0, tableLayoutPanelMessages.Controls.Count);
+                        tableLayoutPanelMessages.ScrollControlIntoView(label_message);
+                    }
+                    else
+                    {
+                        //Оповещение о новом сообщении
+                    }
                 }
             }
         }
@@ -95,6 +104,7 @@ namespace bestAPPever
         private void Username_Click(object sender, EventArgs e)
         {
             Label label = (Label)sender;
+            groupBoxMessages.Text = "Переписка с " + label.Text;
             choosenDialog = new KeyValuePair<int, string>((int)label.Tag, label.Text);
             loadMessages(Login, Id, (int)label.Tag);
         }
@@ -110,12 +120,10 @@ namespace bestAPPever
 
             tableLayoutPanelMessages = new TableLayoutPanel();
             tableLayoutPanelMessages.AutoScroll = true;
-            tableLayoutPanelMessages.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-
-            groupBoxMessages.Controls.Add(tableLayoutPanelMessages);
             tableLayoutPanelMessages.Dock = DockStyle.Fill;
+            groupBoxMessages.Controls.Add(tableLayoutPanelMessages);
 
             DataTable dataTableMessages = new MessagingClass().getTableMessages(login, id, from_id);
             
@@ -127,17 +135,16 @@ namespace bestAPPever
                 message.Text = row[1].ToString();
                 if ((int)row[0] == id)
                 {
-                    //message.Dock = DockStyle.Right;
+                    message.Dock = DockStyle.Right;
                     tableLayoutPanelMessages.Controls.Add(message, 1, row.Table.Rows.IndexOf(row));
                 }
                 else
                 {
-                    //message.Dock = DockStyle.Left;
+                    message.Dock = DockStyle.Left;
                     tableLayoutPanelMessages.Controls.Add(message, 0, row.Table.Rows.IndexOf(row));
                 }
-                tableLayoutPanelMessages.RowStyles.Add(new RowStyle(SizeType.Absolute, message.Height));
-                //tableLayoutPanelMessages.Controls.Add(message);
             }
+            tableLayoutPanelMessages.ScrollControlIntoView(tableLayoutPanelMessages.Controls[tableLayoutPanelMessages.Controls.Count - 1]);
         }
 
         private void buttonSend_Click(object sender, EventArgs e)
@@ -148,8 +155,8 @@ namespace bestAPPever
             label_message.Font = new Font("Arial", 10, FontStyle.Bold);
             label_message.Text = textBoxMessage.Text;
             label_message.Dock = DockStyle.Right;
-            tableLayoutPanelMessages.RowStyles.Add(new RowStyle(SizeType.Absolute, label_message.Height));
-            tableLayoutPanelMessages.Controls.Add(label_message);
+            tableLayoutPanelMessages.Controls.Add(label_message, 1, tableLayoutPanelMessages.Controls.Count);
+            tableLayoutPanelMessages.ScrollControlIntoView(label_message);
             textBoxMessage.Text = "";
         }
     }

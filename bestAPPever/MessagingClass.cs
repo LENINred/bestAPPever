@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 
 namespace bestAPPever
 {
@@ -64,9 +65,10 @@ namespace bestAPPever
         {
             try
             {
-                MySqlConnection myConnection = new MySqlConnection("Database=messages;Data Source=195.114.3.231;User Id=tamagochi_m;Password=111");
+                MySqlConnection myConnection = new MySqlConnection("Database=messages;Data Source=195.114.3.231;User Id=tamagochi_m;Password=111;charset=utf8");
                 string requestSQL = "INSERT INTO `" + login + "_messages`(`to_whom`, `from_who`, `message`, `status`, `date_send`) VALUES ("
                     + friend_id + ", " + id + ", '" + message + "', 0, CURRENT_DATE())";
+
                 MySqlCommand myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
@@ -74,6 +76,7 @@ namespace bestAPPever
 
                 requestSQL = "INSERT INTO `" + friend_name + "_messages`(`to_whom`, `from_who`, `message`, `status`, `date_send`) VALUES ("
                     + friend_id + ", " + id + ", '" + message + "', 0, CURRENT_DATE())";
+
                 myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
@@ -90,7 +93,7 @@ namespace bestAPPever
             try
             {
                 string requestSQL;
-                MySqlConnection myConnection = new MySqlConnection("Database=messages;Data Source=195.114.3.231;User Id=tamagochi_m;Password=111");
+                MySqlConnection myConnection = new MySqlConnection("Database=messages;Data Source=195.114.3.231;User Id=tamagochi_m;Password=111;charset=utf8");
                 if(!checkDialogExist(login, id))
                     requestSQL = "CREATE TABLE " + login + "_dialogues ( friend_id int(11), friend_name varchar(16));\n" +
                     "INSERT INTO `" + login + "_dialogues` (`friend_id`, `friend_name`) VALUES (" + friend_id + ", '" + friend_name + "')";
