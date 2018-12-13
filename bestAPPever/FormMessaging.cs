@@ -109,6 +109,7 @@ namespace bestAPPever
             }
 
             tableLayoutPanelMessages = new TableLayoutPanel();
+            tableLayoutPanelMessages.AutoScroll = true;
             tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
