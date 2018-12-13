@@ -73,7 +73,7 @@ namespace bestAPPever
                 myConnection.Close();
 
                 requestSQL = "INSERT INTO `" + friend_name + "_messages`(`to_whom`, `from_who`, `message`, `status`, `date_send`) VALUES ("
-                    + id + ", " + friend_id + ", '" + message + "', 0, CURRENT_DATE())";
+                    + friend_id + ", " + id + ", '" + message + "', 0, CURRENT_DATE())";
                 myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();

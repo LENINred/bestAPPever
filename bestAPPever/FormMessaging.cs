@@ -110,6 +110,7 @@ namespace bestAPPever
 
             tableLayoutPanelMessages = new TableLayoutPanel();
             tableLayoutPanelMessages.AutoScroll = true;
+            tableLayoutPanelMessages.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
@@ -126,16 +127,18 @@ namespace bestAPPever
                 message.Text = row[1].ToString();
                 if ((int)row[0] == id)
                 {
-                    message.Dock = DockStyle.Right;
+                    //message.Dock = DockStyle.Right;
+                    tableLayoutPanelMessages.Controls.Add(message, 1, row.Table.Rows.IndexOf(row));
                 }
                 else
                 {
-                    message.Dock = DockStyle.Left;
+                    //message.Dock = DockStyle.Left;
+                    tableLayoutPanelMessages.Controls.Add(message, 0, row.Table.Rows.IndexOf(row));
                 }
                 tableLayoutPanelMessages.RowStyles.Add(new RowStyle(SizeType.Absolute, message.Height));
-                tableLayoutPanelMessages.Controls.Add(message);
+                //tableLayoutPanelMessages.Controls.Add(message);
             }
-            }
+        }
 
         private void buttonSend_Click(object sender, EventArgs e)
         {
