@@ -120,31 +120,31 @@ namespace bestAPPever
 
             tableLayoutPanelMessages = new TableLayoutPanel();
             tableLayoutPanelMessages.AutoScroll = true;
-            tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            tableLayoutPanelMessages.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             tableLayoutPanelMessages.Dock = DockStyle.Fill;
+            //tableLayoutPanelMessages.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             groupBoxMessages.Controls.Add(tableLayoutPanelMessages);
 
             DataTable dataTableMessages = new MessagingClass().getTableMessages(login, id, from_id);
-            
             foreach (DataRow row in dataTableMessages.AsEnumerable())
             {
                 Label message = new Label();
                 message.AutoSize = true;
+                message.MaximumSize = new Size(250, 1000);
                 message.Font = new Font("Arial", 10, FontStyle.Bold);
                 message.Text = row[1].ToString();
                 if ((int)row[0] == id)
                 {
                     message.Dock = DockStyle.Right;
-                    tableLayoutPanelMessages.Controls.Add(message, 1, row.Table.Rows.IndexOf(row));
                 }
                 else
                 {
                     message.Dock = DockStyle.Left;
-                    tableLayoutPanelMessages.Controls.Add(message, 0, row.Table.Rows.IndexOf(row));
                 }
+                tableLayoutPanelMessages.Controls.Add(message, 0, row.Table.Rows.IndexOf(row));
+                
             }
-            tableLayoutPanelMessages.ScrollControlIntoView(tableLayoutPanelMessages.Controls[tableLayoutPanelMessages.Controls.Count - 1]);
+            if (tableLayoutPanelMessages.Controls.Count > 1)
+                tableLayoutPanelMessages.ScrollControlIntoView(tableLayoutPanelMessages.Controls[tableLayoutPanelMessages.Controls.Count - 1]);
         }
 
         private void buttonSend_Click(object sender, EventArgs e)

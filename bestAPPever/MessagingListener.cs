@@ -42,8 +42,8 @@ namespace bestAPPever
                     }
                     myDataReader.Close();
                     myConnection.Close();
-                    updateMessageStatus();
                     MessagingEvent(this, new MessagingEventArgs(messages_ids));
+                    updateMessageStatus();
                 }
                 catch
                 {
@@ -64,8 +64,8 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
 
-                requestSQL = "UPDATE `" + From_login + "_messages` SET `status` = 1 WHERE ((`from_who` = " + To_id +
-                    ") AND (`to_whom` = " + From_id + ") AND (`status` = 0))";
+                requestSQL = "UPDATE `" + From_login + "_messages` SET `status` = 1 WHERE ((`from_who` = " + From_id +
+                    ") AND (`to_whom` = " + To_id + ") AND (`status` = 0))";
                 myCommand = new MySqlCommand(requestSQL, myConnection);
                 myConnection.Open();
                 myCommand.ExecuteScalar();
