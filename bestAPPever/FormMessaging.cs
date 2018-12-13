@@ -67,11 +67,13 @@ namespace bestAPPever
                     {
                         Label label_message = new Label();
                         label_message.AutoSize = true;
+                        label_message.MaximumSize = new Size(250, 1000);
                         label_message.Font = new Font("Arial", 10, FontStyle.Bold);
-                        label_message.Text = message_id.Value;
                         label_message.Tag = message_id.Key;
+                        label_message.Text = message_id.Value;
                         label_message.Dock = DockStyle.Left;
                         tableLayoutPanelMessages.Controls.Add(label_message, 0, tableLayoutPanelMessages.Controls.Count);
+
                         tableLayoutPanelMessages.ScrollControlIntoView(label_message);
                     }
                     else
@@ -152,10 +154,11 @@ namespace bestAPPever
             new MessagingClass().SendMessage(Login, Id, choosenDialog.Value, choosenDialog.Key, textBoxMessage.Text);
             Label label_message = new Label();
             label_message.AutoSize = true;
+            label_message.MaximumSize = new Size(250, 1000);
             label_message.Font = new Font("Arial", 10, FontStyle.Bold);
             label_message.Text = textBoxMessage.Text;
             label_message.Dock = DockStyle.Right;
-            tableLayoutPanelMessages.Controls.Add(label_message, 1, tableLayoutPanelMessages.Controls.Count);
+            tableLayoutPanelMessages.Controls.Add(label_message, 0, tableLayoutPanelMessages.Controls.Count);
             tableLayoutPanelMessages.ScrollControlIntoView(label_message);
             textBoxMessage.Text = "";
         }
