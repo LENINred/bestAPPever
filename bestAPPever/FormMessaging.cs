@@ -45,7 +45,15 @@ namespace bestAPPever
 
         private void FormMessaging_Load(object sender, System.EventArgs e)
         {
-            //--
+            textBoxMessage.KeyPress += TextBoxMessage_KeyPress;
+        }
+
+        private void TextBoxMessage_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (textBoxMessage.Text.Trim() != "")
+            {
+                if (e.KeyChar == '\r') buttonSend.PerformClick();
+            }
         }
 
         private void MessagingListener_MessagingEvent(object sender, MessagingEventArgs e)
@@ -65,13 +73,7 @@ namespace bestAPPever
                 {
                     if (message_id.Key == choosenDialog.Key)
                     {
-                        Label label_message = new Label();
-                        label_message.AutoSize = true;
-                        label_message.MaximumSize = new Size(250, 1000);
-                        label_message.Font = new Font("Arial", 10, FontStyle.Bold);
-                        label_message.Tag = message_id.Key;
-                        label_message.Text = message_id.Value;
-                        label_message.Dock = DockStyle.Left;
+                        Label label_message = new CreateObjects().createMessageLabel(message_id.Value, false);
                         tableLayoutPanelMessages.Controls.Add(label_message, 0, tableLayoutPanelMessages.Controls.Count);
 
                         tableLayoutPanelMessages.ScrollControlIntoView(label_message);
@@ -129,18 +131,14 @@ namespace bestAPPever
             DataTable dataTableMessages = new MessagingClass().getTableMessages(login, id, from_id);
             foreach (DataRow row in dataTableMessages.AsEnumerable())
             {
-                Label message = new Label();
-                message.AutoSize = true;
-                message.MaximumSize = new Size(250, 1000);
-                message.Font = new Font("Arial", 10, FontStyle.Bold);
-                message.Text = row[1].ToString();
+                Label message;
                 if ((int)row[0] == id)
                 {
-                    message.Dock = DockStyle.Right;
+                    message = new CreateObjects().createMessageLabel(row[1].ToString(), true);
                 }
                 else
                 {
-                    message.Dock = DockStyle.Left;
+                    message = new CreateObjects().createMessageLabel(row[1].ToString(), false);
                 }
                 tableLayoutPanelMessages.Controls.Add(message, 0, row.Table.Rows.IndexOf(row));
                 
@@ -151,16 +149,14 @@ namespace bestAPPever
 
         private void buttonSend_Click(object sender, EventArgs e)
         {
-            new MessagingClass().SendMessage(Login, Id, choosenDialog.Value, choosenDialog.Key, textBoxMessage.Text);
-            Label label_message = new Label();
-            label_message.AutoSize = true;
-            label_message.MaximumSize = new Size(250, 1000);
-            label_message.Font = new Font("Arial", 10, FontStyle.Bold);
-            label_message.Text = textBoxMessage.Text;
-            label_message.Dock = DockStyle.Right;
-            tableLayoutPanelMessages.Controls.Add(label_message, 0, tableLayoutPanelMessages.Controls.Count);
-            tableLayoutPanelMessages.ScrollControlIntoView(label_message);
-            textBoxMessage.Text = "";
+            if (textBoxMessage.Text.Trim() != "")
+            {
+                new MessagingClass().SendMessage(Login, Id, choosenDialog.Value, choosenDialog.Key, textBoxMessage.Text);
+                Label label_message = new CreateObjects().createMessageLabel(textBoxMessage.Text, true);
+                tableLayoutPanelMessages.Controls.Add(label_message, 0, tableLayoutPanelMessages.Controls.Count);
+                tableLayoutPanelMessages.ScrollControlIntoView(label_message);
+                textBoxMessage.Text = "";
+            }
         }
     }
 }

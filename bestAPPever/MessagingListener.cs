@@ -27,7 +27,7 @@ namespace bestAPPever
         {
             while (true)
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(1500);
                 try
                 {
                     MySqlConnection myConnection = new MySqlConnection("Database=messages;Data Source=195.114.3.231;User Id=tamagochi_m;Password=111");

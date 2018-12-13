@@ -123,6 +123,20 @@ namespace bestAPPever
             return label;
         }
 
+        public Label createMessageLabel(string message, bool mine)
+        {
+            Label label_message = new Label();
+            label_message.AutoSize = true;
+            label_message.MaximumSize = new Size(250, 1000);
+            label_message.Font = new Font("Arial", 10, FontStyle.Bold);
+            label_message.Text = message;
+            if(mine)
+                label_message.Dock = DockStyle.Right;
+            else
+                label_message.Dock = DockStyle.Left;
+            return label_message;
+        }
+
         public ComboBox createComboBox(string name, Point point)
         {
             ComboBox comboBox = new ComboBox();
