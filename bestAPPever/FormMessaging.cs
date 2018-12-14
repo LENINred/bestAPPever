@@ -125,6 +125,7 @@ namespace bestAPPever
             tableLayoutPanelMessages = new TableLayoutPanel();
             tableLayoutPanelMessages.AutoScroll = true;
             tableLayoutPanelMessages.Dock = DockStyle.Fill;
+            tableLayoutPanelMessages.HorizontalScroll.Enabled = false;
             //tableLayoutPanelMessages.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             groupBoxMessages.Controls.Add(tableLayoutPanelMessages);
 

@@ -70,12 +70,13 @@ namespace bestAPPever
         
         private void ButtonReg_Click(object sender, EventArgs e)
         {
-            KeyValuePair<int, object>[] userData = new RegLogInClass().regisrUser(textBoxLogin.Text, textBoxPassword.Text);
+            //KeyValuePair<int, object>[] userData = new RegLogInClass().regisrUser(textBoxLogin.Text, textBoxPassword.Text);//old
+            List<KeyValuePair<string, object>> userData = new NewRegLogInClass().regisrUser(textBoxLogin.Text, textBoxPassword.Text);
             user_id = short.Parse(userData[2].Value.ToString());
             
             ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (string)userData[0].Value;
 
-            if ((bool)userData[1].Value)
+            if (Boolean.Parse(userData[1].Value.ToString()))
             {
                 //moveing to pers creation
                 Login = textBoxLogin.Text;
@@ -87,15 +88,16 @@ namespace bestAPPever
         TamagochiEditor tamagochiEditor;
         private void buttonLogIn_Click(object sender, EventArgs e)
         {
-            KeyValuePair<int, object>[] userData = new RegLogInClass().tryToLogIn(textBoxLogin.Text, textBoxPassword.Text);
+            //KeyValuePair<int, object>[] userData = new RegLogInClass().tryToLogIn(textBoxLogin.Text, textBoxPassword.Text);//old
+            List<KeyValuePair<string, object>> userData = new NewRegLogInClass().tryToLogIn(textBoxLogin.Text, textBoxPassword.Text);
             user_id = short.Parse(userData[2].Value.ToString());
             
             ((ToolStripLabel)statusStrip.Items.Find("logLabel", true).GetValue(0)).Text = (string)userData[0].Value;
-
-            if ((bool)userData[1].Value)
+            
+            if (Boolean.Parse(userData[1].Value.ToString()))
             {
                 saveLogin(textBoxLogin.Text, textBoxPassword.Text);
-                if (!(bool)userData[3].Value)
+                if (!Boolean.Parse(userData[3].Value.ToString()))
                 {
                     //moveing to pers creation
                     this.Text = "Создание персонажа";

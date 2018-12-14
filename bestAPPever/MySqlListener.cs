@@ -88,7 +88,7 @@ namespace bestAPPever
                 myCommand.ExecuteScalar();
                 myConnection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 //--
             }

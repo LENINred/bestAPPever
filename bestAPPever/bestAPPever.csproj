@@ -64,6 +64,7 @@
     <Compile Include="MessagingClass.cs" />
     <Compile Include="MessagingListener.cs" />
     <Compile Include="MySqlListener.cs" />
+    <Compile Include="NewRegLogInClass.cs" />
     <Compile Include="RegLogInClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
