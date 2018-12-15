@@ -61,6 +61,7 @@
     <Compile Include="FormMessaging.Designer.cs">
       <DependentUpon>FormMessaging.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewMessagingClass.cs" />
     <Compile Include="MessagingClass.cs" />
     <Compile Include="MessagingListener.cs" />
     <Compile Include="MySqlListener.cs" />

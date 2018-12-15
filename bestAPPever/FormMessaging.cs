@@ -129,6 +129,8 @@ namespace bestAPPever
             //tableLayoutPanelMessages.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             groupBoxMessages.Controls.Add(tableLayoutPanelMessages);
 
+            //new NewMessagingClass().getTableMessages(login, id, from_id);
+
             DataTable dataTableMessages = new MessagingClass().getTableMessages(login, id, from_id);
             foreach (DataRow row in dataTableMessages.AsEnumerable())
             {
